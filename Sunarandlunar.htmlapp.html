@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق الحروف الشمسية والقمرية / ئەپی پیتی شەمسی و قەمەری</title>
+    <title>Sun and Moon Letters Learning App</title>
     <style>
-        /* CSS Variables for Theme Support */
         :root {
             --bg-color: #f3f4f6;
             --card-bg: #ffffff;
@@ -21,6 +20,8 @@
             --match-btn-bg: #ffffff;
             --match-btn-selected: #fef08a;
             --match-btn-correct: #bbf7d0;
+            --input-bg: #ffffff;
+            --table-header-bg: #e5e7eb;
         }
 
         [data-theme="dark"] {
@@ -38,6 +39,8 @@
             --match-btn-bg: #374151;
             --match-btn-selected: #854d0e;
             --match-btn-correct: #166534;
+            --input-bg: #374151;
+            --table-header-bg: #4b5563;
         }
 
         body { 
@@ -52,11 +55,12 @@
 
         .header-controls {
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
-        .theme-toggle-btn {
+        .theme-toggle-btn, .auth-btn-header {
             padding: 8px 14px;
             font-size: 14px;
             border-radius: 20px;
@@ -94,25 +98,22 @@
         }
         .letter-btn:hover { background: var(--btn-hover); }
 
-        #display-box, #quiz-box, #match-box { margin-top: 20px; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; line-height: 1.6; }
+        #display-box, #quiz-box, #match-box, #leaderboard-box { margin-top: 20px; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; line-height: 1.6; }
         .sun { background-color: #fef3c7; color: #d97706; border: 1px solid #f59e0b; }
         .moon { background-color: #dbeafe; color: #2563eb; border: 1px solid #3b82f6; }
         .neutral { background-color: var(--btn-bg); color: var(--text-color); border: 1px solid var(--border-color); }
         
-        /* Mode Toggle Buttons */
         .mode-toggle { margin-bottom: 20px; display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
         .mode-btn { padding: 10px 14px; font-size: 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .active-mode { background-color: #6366f1; color: white; }
         .inactive-mode { background-color: var(--btn-bg); color: var(--text-color); border: 1px solid var(--border-color); }
         
-        /* Quiz Mode Styles */
         .quiz-option-btn { font-size: 16px; padding: 12px 20px; margin: 10px 5px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
         .btn-sun-quiz { background-color: #f59e0b; color: white; }
         .btn-moon-quiz { background-color: #3b82f6; color: white; }
         .score-board { margin-top: 15px; font-size: 16px; color: var(--subtext-color); }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
 
-        /* Timer Styles */
         .timer-container {
             width: 100%;
             background-color: var(--border-color);
@@ -148,14 +149,13 @@
             letter-spacing: 2px;
         }
 
-        /* Reading Practice Section Styles */
         .reading-section {
             margin-top: 30px;
             padding: 15px;
             background-color: var(--reading-section-bg);
             border-radius: 10px;
             border: 1px solid var(--border-color);
-            text-align: right;
+            text-align: left;
         }
         .reading-section h3 {
             margin-top: 0;
@@ -182,7 +182,6 @@
             margin-top: 4px;
         }
 
-        /* Matching Game Styles */
         .matching-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -229,161 +228,216 @@
             font-weight: bold;
             font-size: 15px;
         }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .leaderboard-table th {
+            background-color: var(--table-header-bg);
+        }
+
+        .save-score-container {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .save-score-container input {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .auth-container {
+            max-width: 350px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .auth-container input {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 14px;
+        }
+        .auth-toggle-text {
+            font-size: 14px;
+            margin-top: 10px;
+            color: var(--subtext-color);
+        }
+        .auth-toggle-text span {
+            color: #6366f1;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        .user-info {
+            font-size: 14px;
+            font-weight: bold;
+            color: #6366f1;
+        }
     </style>
 </head>
 <body>
 
 <div class="card">
     <div class="header-controls">
-        <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
-    </div>
-
-    <h2>پشکنینی پیتی شەمسی و قەمەری / الحروف الشمسية والقمرية</h2>
-    
-    <!-- Mode Selection -->
-    <div class="mode-toggle">
-        <button id="learnModeBtn" class="mode-btn active-mode" onclick="setMode('learn')">فێربوون / التعلم</button>
-        <button id="quizModeBtn" class="mode-btn inactive-mode" onclick="setMode('quiz')">تاقیکردنەوە / اختبار</button>
-        <button id="matchModeBtn" class="mode-btn inactive-mode" onclick="setMode('match')">بەستنەوە / المطابقة 🧩</button>
-    </div>
-
-    <!-- Learn Mode Grid -->
-    <div id="learnContainer">
-        <div class="grid" id="letterGrid"></div>
-        <div id="display-box" class="neutral">ئەنجام لێرە دیاری دەکات / اختر حرفاً</div>
-
-        <!-- Practice Reading Sentences Section -->
-        <div class="reading-section">
-            <h3>📖 ڕستەکان بۆ خوێندنەوە / جمل للقراءة</h3>
-            
-            <div class="reading-card">
-                <div class="reading-text">
-                    <b>الشَّمْسُ</b> طَالِعَةٌ وَ<b>القَمَرُ</b> غَائِبٌ.
-                    <small>کوردی: خۆرەکە هەڵهاتووە و مانگەکە ئاوابووە.</small>
-                    <small>English: The sun is rising and the moon is absent.</small>
-                </div>
-            </div>
-
-            <div class="reading-card">
-                <div class="reading-text">
-                    <b>الوَالِدُ</b> يَكْتُبُ فِي <b>الكِتَابِ</b>.
-                    <small>کوردی: باوکەکە لە کتێبەکەدا دەنووسێت.</small>
-                    <small>English: The father writes in the book.</small>
-                </div>
-            </div>
-
-            <div class="reading-card">
-                <div class="reading-text">
-                    <b>الطَّالِبُ</b> يَذْهَبُ إِلَى <b>المَدْرَسَةِ</b>.
-                    <small>کوردی: قوتابییەکە دەچێت بۆ قوتابخانە.</small>
-                    <small>English: The student goes to school.</small>
-                </div>
-            </div>
-
-            <div class="reading-card">
-                <div class="reading-text">
-                    <b>الزَّهْرَةُ</b> جَمِيلَةٌ فِي <b>الحَدِيقَةِ</b>.
-                    <small>کوردی: گوڵەکە لە باخچەکەدا جوانە.</small>
-                    <small>English: The flower is beautiful in the garden.</small>
-                </div>
-            </div>
-
-            <div class="reading-card">
-                <div class="reading-text">
-                    <b>السَّمَاءُ</b> صَافِيَةٌ وَ<b>البَحْرُ</b> هَادِئٌ.
-                    <small>کوردی: ئاسمانەکە ساماڵە و دەریایەکە هێمنە.</small>
-                    <small>English: The sky is clear and the sea is calm.</small>
-                </div>
-            </div>
+        <div id="userInfo" class="user-info"></div>
+        <div>
+            <button id="authBtn" class="auth-btn-header" onclick="handleAuthClick()">Sign In</button>
+            <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
         </div>
     </div>
 
-    <!-- Quiz Mode Container -->
-    <div id="quizContainer" class="hidden">
-        <div id="quiz-box" class="neutral">
-            <p id="quizQuestion">تکایە دەستپێبکە / اضغط لبدء الاختبار</p>
-            <div id="quizWordDisplay" style="font-size: 28px; margin: 10px 0;">-</div>
-            <div id="quizSentenceDisplay" class="sentence-box" style="display: none;"></div>
-            <div>
-                <button class="quiz-option-btn btn-sun-quiz" onclick="checkAnswer('Sun')">شەمسی / شمسي ☀️</button>
-                <button class="quiz-option-btn btn-moon-quiz" onclick="checkAnswer('Moon')">قەمەری / قمري 🌙</button>
-            </div>
-
-            <!-- Countdown Timer UI -->
-            <div class="timer-container">
-                <div id="timerBar" class="timer-bar"></div>
-            </div>
-            <div id="timerText" class="timer-text">کات: 10 / الوقت: 10</div>
-
-            <div id="quizFeedback" style="margin-top: 15px; min-height: 24px;"></div>
-        </div>
-        <div class="score-board">
-            نمرە / النتيجة: <span id="score">0</span> / <span id="totalQuestions">0</span>
+    <!-- Auth Form Section -->
+    <div id="authSection" class="hidden">
+        <h2 id="authTitle">Sign In</h2>
+        <div class="auth-container">
+            <input type="text" id="usernameInput" placeholder="Username">
+            <input type="password" id="passwordInput" placeholder="Password">
+            <button id="submitAuthBtn" class="action-btn" onclick="submitAuth()">Sign In</button>
+            <div id="authMsg" style="font-size: 14px; font-weight: bold;"></div>
+            <p class="auth-toggle-text" id="authToggleText">
+                Don't have an account? <span onclick="toggleAuthMode('signup')">Sign Up</span>
+            </p>
         </div>
     </div>
 
-    <!-- Matching Mode Container -->
-    <div id="matchContainer" class="hidden">
-        <div id="match-box" class="neutral">
-            <p style="margin-top: 0;">پیتەکان ببەستەرەوە بە وشە گونجاوەکان / طابق الحروف مع الكلمات</p>
-            <div class="matching-grid">
-                <div class="match-column" id="lettersColumn"></div>
-                <div class="match-column" id="wordsColumn"></div>
+    <!-- Main App Section -->
+    <div id="appSection">
+        <h2>Sun and Moon Letters Checker</h2>
+        
+        <div class="mode-toggle">
+            <button id="learnModeBtn" class="mode-btn active-mode" onclick="setMode('learn')">Learn Mode</button>
+            <button id="quizModeBtn" class="mode-btn inactive-mode" onclick="setMode('quiz')">Quiz Mode</button>
+            <button id="matchModeBtn" class="mode-btn inactive-mode" onclick="setMode('match')">Matching Game 🧩</button>
+            <button id="leaderboardModeBtn" class="mode-btn inactive-mode" onclick="setMode('leaderboard')">Leaderboard 🏆</button>
+        </div>
+
+        <!-- Learn Mode Grid -->
+        <div id="learnContainer">
+            <div class="grid" id="letterGrid"></div>
+            <div id="display-box" class="neutral">Select a letter above</div>
+
+            <div class="reading-section">
+                <h3>📖 Reading Practice Sentences</h3>
+                <div class="reading-card">
+                    <div class="reading-text">
+                        <b>الشَّمْسُ</b> طَالِعَةٌ وَ<b>القَمَرُ</b> غَائِبٌ.
+                        <small>English: The sun is rising and the moon is absent.</small>
+                    </div>
+                </div>
+                <div class="reading-card">
+                    <div class="reading-text">
+                        <b>الوَالِدُ</b> يَكْتُبُ فِي <b>الكِتَابِ</b>.
+                        <small>English: The father writes in the book.</small>
+                    </div>
+                </div>
+                <div class="reading-card">
+                    <div class="reading-text">
+                        <b>الطَّالِبُ</b> يَذْهَبُ إِلَى <b>المَدْرَسَةِ</b>.
+                        <small>English: The student goes to school.</small>
+                    </div>
+                </div>
             </div>
-            <div id="matchFeedback" style="margin-top: 15px; min-height: 24px;"></div>
-            <button class="action-btn" onclick="startMatchingGame()">یاری نوێ / لعبة جديدة 🔄</button>
+        </div>
+
+        <!-- Quiz Mode Container -->
+        <div id="quizContainer" class="hidden">
+            <div id="quiz-box" class="neutral">
+                <p id="quizQuestion">Click to start the quiz</p>
+                <div id="quizWordDisplay" style="font-size: 28px; margin: 10px 0;">-</div>
+                <div id="quizSentenceDisplay" class="sentence-box" style="display: none;"></div>
+                <div>
+                    <button class="quiz-option-btn btn-sun-quiz" onclick="checkAnswer('Sun')">Sun Letter ☀️</button>
+                    <button class="quiz-option-btn btn-moon-quiz" onclick="checkAnswer('Moon')">Moon Letter 🌙</button>
+                </div>
+
+                <div class="timer-container">
+                    <div id="timerBar" class="timer-bar"></div>
+                </div>
+                <div id="timerText" class="timer-text">Time: 10s</div>
+
+                <div id="quizFeedback" style="margin-top: 15px; min-height: 24px;"></div>
+            </div>
+            <div class="score-board">
+                Score: <span id="score">0</span> / <span id="totalQuestions">0</span>
+            </div>
+
+            <!-- Add Score to Leaderboard Section -->
+            <div class="save-score-container">
+                <input type="text" id="playerNameInput" placeholder="Enter name to save score">
+                <button class="action-btn" style="margin-top:0;" onclick="saveScoreToLeaderboard()">Add Score to Leaderboard 🏆</button>
+            </div>
+            <div id="saveScoreMsg" style="margin-top: 8px; font-size: 14px; font-weight: bold;"></div>
+        </div>
+
+        <!-- Matching Mode Container -->
+        <div id="matchContainer" class="hidden">
+            <div id="match-box" class="neutral">
+                <p style="margin-top: 0;">Match the letters to their correct words</p>
+                <div class="matching-grid">
+                    <div class="match-column" id="lettersColumn"></div>
+                    <div class="match-column" id="wordsColumn"></div>
+                </div>
+                <div id="matchFeedback" style="margin-top: 15px; min-height: 24px;"></div>
+                <button class="action-btn" onclick="startMatchingGame()">New Game 🔄</button>
+            </div>
+        </div>
+
+        <!-- Leaderboard Container -->
+        <div id="leaderboardContainer" class="hidden">
+            <div id="leaderboard-box" class="neutral">
+                <h3 style="margin: 0;">🏆 Top Performers</h3>
+
+                <div class="save-score-container" style="margin-bottom: 15px;">
+                    <input type="text" id="manualNameInput" placeholder="Name">
+                    <input type="number" id="manualScoreInput" placeholder="Score">
+                    <button class="action-btn" style="margin-top:0;" onclick="addManualScore()">Add Score</button>
+                </div>
+
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>High Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody"></tbody>
+                </table>
+                <button class="action-btn" style="background-color: #ef4444; margin-top: 15px;" onclick="clearLeaderboard()">Clear Leaderboard 🗑️</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
     const lettersData = [
-        { letter: "ت", type: "Sun", word: "التَّمْرُ", sentenceWithBlank: "___ لَذِيذٌ وَمُفِيدٌ.", sentenceFull: "التَّمْرُ لَذِيذٌ وَمُفِيدٌ.", meanKurdish: "خورما بەتام و بەسوودە.", meanEnglish: "The dates are delicious and useful.", meanTurkish: "Hurma lezzetli ve faydalıdır." },
-        { letter: "ر", type: "Sun", word: "الرَّجُلُ", sentenceWithBlank: "___ يَمْشِي فِي الشَّارِعِ.", sentenceFull: "الرَّجُلُ يَمْشِي فِي الشَّارِعِ.", meanKurdish: "پیاوەکە لە شەقامەکە دەڕوات.", meanEnglish: "The man is walking in the street.", meanTurkish: "Adam sokakta yürüyor." },
-        { letter: "س", type: "Sun", word: "السَّمَاءُ", sentenceWithBlank: "___ صَافِيَةٌ اليَوْمَ.", sentenceFull: "السَّمَاءُ صَافِيَةٌ اليَوْمَ.", meanKurdish: "ئاسمانەکە ئەمڕۆ ساماڵە.", meanEnglish: "The sky is clear today.", meanTurkish: "Bugün gökyüzü açık." },
-        { letter: "ش", type: "Sun", word: "الشَّمْسُ", sentenceWithBlank: "___ مُشْرِقَةٌ فِي الصَّبَاحِ.", sentenceFull: "الشَّمْسُ مُشْرِقَةٌ فِي الصَّبَاحِ.", meanKurdish: "خۆرەکە لە بەیانیدا گەشاوەیە.", meanEnglish: "The sun is bright in the morning.", meanTurkish: "Güneş sabahları parlaktır." },
-        { letter: "ن", type: "Sun", word: "النَّجْمُ", sentenceWithBlank: "___ يَلْمَعُ فِي اللَّيْلِ.", sentenceFull: "النَّجْمُ يَلْمَعُ فِي اللَّيْلِ.", meanKurdish: "ئەستێرەکە لە شەودا دەدرەوشێتەوە.", meanEnglish: "The star shines at night.", meanTurkish: "Yıldız geceleri parlar." },
-        { letter: "ب", type: "Moon", word: "البَابُ", sentenceWithBlank: "___ مَفْتُوحٌ الآنَ.", sentenceFull: "البَابُ مَفْتُوحٌ الآنَ.", meanKurdish: "دەرگاکە ئێستا کراوەیە.", meanEnglish: "The door is open now.", meanTurkish: "Kapı şu anda açık." },
-        { letter: "ج", type: "Moon", word: "الجَبَلُ", sentenceWithBlank: "___ عَالٍ جِدًّا.", sentenceFull: "الجَبَلُ عَالٍ جِدًّا.", meanKurdish: "شاخەکە زۆر بەرزە.", meanEnglish: "The mountain is very high.", meanTurkish: "Dağ çok yüksektir." },
-        { letter: "ع", type: "Moon", word: "العَيْنُ", sentenceWithBlank: "___ تَرَى الأَلْوَانَ.", sentenceFull: "العَيْنُ تَرَى الأَلْوَانَ.", meanKurdish: "چاوەکە ڕەنگەکان دەبینێت.", meanEnglish: "The eye sees colors.", meanTurkish: "Göz renkleri görür." },
-        { letter: "ق", type: "Moon", word: "القَمَرُ", sentenceWithBlank: "___ جَمِيلٌ فِي اللَّيْلِ.", sentenceFull: "القَمَرُ جَمِيلٌ فِي اللَّيْلِ.", meanKurdish: "مانگەکە لە شەودا جوانە.", meanEnglish: "The moon is beautiful at night.", meanTurkish: "Ay geceleri güzeldir." },
-        { letter: "ك", type: "Moon", word: "الكِتَابُ", sentenceWithBlank: "___ عَلَى الطَّاوِلَةِ.", sentenceFull: "الكِتَابُ عَلَى الطَّاوِلَةِ.", meanKurdish: "کتێبەکە لەسەر مێزەکەیە.", meanEnglish: "The book is on the table.", meanTurkish: "Kitap masanın üzerindedir." },
-        { letter: "د", type: "Sun", word: "الدَّرَّاجَةُ", sentenceWithBlank: "___ سَرِيعَةٌ جِدًّا.", sentenceFull: "الدَّرَّاجَةُ سَرِيعَةٌ جِدًّا.", meanKurdish: "پایسکیلەکە زۆر خێرایە.", meanEnglish: "The bicycle is very fast.", meanTurkish: "Bisiklet çok hızlıdır." },
-        { letter: "ز", type: "Sun", word: "الزَّهْرَةُ", sentenceWithBlank: "___ جَمِيلَةٌ جِدًّا.", sentenceFull: "الزَّهْرَةُ جَمِيلَةٌ جِدًّا.", meanKurdish: "گوڵەکە زۆر جوانە.", meanEnglish: "The flower is very beautiful.", meanTurkish: "Çiçek çok güzeldir." },
-        { letter: "ط", type: "Sun", word: "الطَّائِرَةُ", sentenceWithBlank: "___ تَطِيرُ فِي السَّماءِ.", sentenceFull: "الطَّائِرَةُ تَطِيرُ فِي السَّماءِ.", meanKurdish: "فڕۆکەکە لە ئاسماندا دەفڕێت.", meanEnglish: "The airplane flies in the sky.", meanTurkish: "Uçak gökyüzünde uçuyor." },
-        { letter: "ح", type: "Moon", word: "الحَدِيقَةُ", sentenceWithBlank: "___ وَاسِعَةٌ وَخَضْرَاءُ.", sentenceFull: "الحَدِيقَةُ وَاسِعَةٌ وَخَضْرَاءُ.", meanKurdish: "باخچەکە فراوان و سەوزە.", meanEnglish: "The garden is spacious and green.", meanTurkish: "Bahçe geniş ve yeşildir." },
-        { letter: "م", type: "Moon", word: "المَاءُ", sentenceWithBlank: "___ بَارِدٌ وَنَقِيٌّ.", sentenceFull: "المَاءُ بَارِدٌ وَنَقِيٌّ.", meanKurdish: "ئاوەکە سارد و پاكە.", meanEnglish: "The water is cold and pure.", meanTurkish: "Su soğuk ve temizdir." },
-        { letter: "ث", type: "Sun", word: "الثَّعْلَبُ", sentenceWithBlank: "___ حَيَوَانٌ ذَكِيٌّ.", sentenceFull: "الثَّعْلَبُ حَيَوَانٌ ذَكِيٌّ.", meanKurdish: "ڕێوییەکە ئاژەڵێکی ژیرە.", meanEnglish: "The fox is a smart animal.", meanTurkish: "Tilki akıllı bir hayvandır." },
-        { letter: "ذ", type: "Sun", word: "الذِّئْبُ", sentenceWithBlank: "___ يَعِيشُ فِي الغَابَةِ.", sentenceFull: "الذِّئْبُ يَعِيشُ فِي الغَابَةِ.", meanKurdish: "گورگەکە لە دارستاندا دەژیت.", meanEnglish: "The wolf lives in the forest.", meanTurkish: "Kurt ormanda yaşar." },
-        { letter: "ص", type: "Sun", word: "الصَّابُونُ", sentenceWithBlank: "___ يُنَظِّفُ اليَدَيْنِ.", sentenceFull: "الصَّابُونُ يُنَظِّفُ اليَدَيْنِ.", meanKurdish: "صابۆنەکە دەستەکان پاک دەکاتەوە.", meanEnglish: "The soap cleans the hands.", meanTurkish: "Sabun elleri temizler." },
-        { letter: "ض", type: "Sun", word: "الضَّوْءُ", sentenceWithBlank: "___ قَوِيٌّ فِي الغُرْفَةِ.", sentenceFull: "الضَّوْءُ قَوِيٌّ فِي الغُرْفَةِ.", meanKurdish: "ڕووناکییەکە لە ژوورەکەدا بەهێزە.", meanEnglish: "The light is strong in the room.", meanTurkish: "Odadaki ışık güçlüdür." },
-        { letter: "ل", type: "Sun", word: "اللَّيْمُونُ", sentenceWithBlank: "___ حَامِضٌ جِدًّا.", sentenceFull: "اللَّيْمُونُ حَامِضٌ جِدًّا.", meanKurdish: "لێمۆکە زۆر ترشە.", meanEnglish: "The lemon is very sour.", meanTurkish: "Limon çok ekşidir." },
-        { letter: "أ", type: "Moon", word: "الأَسَدُ", sentenceWithBlank: "___ مَلِكُ الغَابَةِ.", sentenceFull: "الأَسَدُ مَلِكُ الغَابَةِ.", meanKurdish: "شێرەکە پاشای دارستانە.", meanEnglish: "The lion is the king of the jungle.", meanTurkish: "Aslan ormanın kralıdır." },
-        { letter: "خ", type: "Moon", word: "الخُبْزُ", sentenceWithBlank: "___ طَازَجٌ وَسَاخِنٌ.", sentenceFull: "الخُبْزُ طَازَجٌ وَسَاخِنٌ.", meanKurdish: "نانەکە تازە و گەرمە.", meanEnglish: "The bread is fresh and hot.", meanTurkish: "Ekmek taze ve sıcaktır." },
-        { letter: "ف", type: "Moon", word: "الفِيلُ", sentenceWithBlank: "___ حَيَوَانٌ ضَخْمٌ.", sentenceFull: "الفِيلُ حَيَوَانٌ ضَخْمٌ.", meanKurdish: "فیلەکە ئاژەڵێکی گەورەیە.", meanEnglish: "The elephant is a huge animal.", meanTurkish: "Fil kocaman bir hayvandır." },
-        { letter: "هـ", type: "Moon", word: "الهَاتِفُ", sentenceWithBlank: "___ يَرِنُّ الآنَ.", sentenceFull: "الهَاتِفُ يَرِنُّ الآنَ.", meanKurdish: "تەلەفۆنەکە ئێستا زەنگ لێدەدات.", meanEnglish: "The phone is ringing now.", meanTurkish: "Telefon şimdi çalıyor." },
-        { letter: "ي", type: "Moon", word: "اليَدُ", sentenceWithBlank: "___ نَظِيفَةٌ تَمَامًا.", sentenceFull: "اليَدُ نَظِيفَةٌ تَمَامًا.", meanKurdish: "دەستەکە بە تەواوی پاکە.", meanEnglish: "The hand is completely clean.", meanTurkish: "El tamamen temizdir." },
-        { letter: "ظ", type: "Sun", word: "الظَّرْفُ", sentenceWithBlank: "___ مَغْلَقٌ جَيِّدًا.", sentenceFull: "الظَّرْفُ مَغْلَقٌ جَيِّدًا.", meanKurdish: "زەرفەکە بە باشی داخراوە.", meanEnglish: "The envelope is well sealed.", meanTurkish: "Zarf iyi kapatılmış." },
-        { letter: "غ", type: "Moon", word: "الغَزَالُ", sentenceWithBlank: "___ يَرْكُضُ فِي الحَقْلِ.", sentenceFull: "الغَزَالُ يَرْكُضُ فِي الحَقْلِ.", meanKurdish: "ئاسکەکە لە کێڵگەکەدا دەڕوات.", meanEnglish: "The gazelle runs in the field.", meanTurkish: "Ceylan tarlada koşuyor." },
-        { letter: "و", type: "Moon", word: "الوَرْدَةُ", sentenceWithBlank: "___ حَمْرَاءُ وَجَمِيلَةٌ.", sentenceFull: "الوَرْدَةُ حَمْرَاءُ وَجَمِيلَةٌ.", meanKurdish: "گوڵەباخەکە سور و جوانە.", meanEnglish: "The rose is red and beautiful.", meanTurkish: "Gül kırmızı ve güzeldir." },
-        { letter: "ك", type: "Moon", word: "الكَلْبُ", sentenceWithBlank: "___ حَارِسٌ أَمِينٌ.", sentenceFull: "الكَلْبُ حَارِسٌ أَمِينٌ.", meanKurdish: "سەگەکە پاسەوانێکی دەستپاکە.", meanEnglish: "The dog is a faithful guard.", meanTurkish: "Köpek sadık bir bekçidir." },
-        { letter: "ش", type: "Sun", word: "الشَّجَرَةُ", sentenceWithBlank: "___ طَوِيلَةٌ وَكَبِيرَةٌ.", sentenceFull: "الشَّجَرَةُ طَوِيلَةٌ وَكَبِيرَةٌ.", meanKurdish: "دارەکە بەرز و گەورەیە.", meanEnglish: "The tree is tall and big.", meanTurkish: "Ağaç uzun ve büyüktür." },
-        { letter: "أ", type: "Moon", word: "التُّفَّاحُ", sentenceWithBlank: "___ فَاكِهَةٌ لَذِيذَةٌ.", sentenceFull: "التُّفَّاحُ فَاكِهَةٌ لَذِيذَةٌ.", meanKurdish: "سێوەکە میوەیەکی بەتامە.", meanEnglish: "The apple is a delicious fruit.", meanTurkish: "Elma lezzetli bir meyvedir." },
-        { letter: "ث", type: "Sun", word: "الثَّلْجُ", sentenceWithBlank: "___ يَنزِلُ فِي الشِّتَاءِ.", sentenceFull: "الثَّلْجُ يَنزِلُ فِي الشِّتَاءِ.", meanKurdish: "بەفر لە زستاندا دەبارێت.", meanEnglish: "The snow falls in winter.", meanTurkish: "Kışın kar yağar." },
-        { letter: "ج", type: "Moon", word: "الجَمَلُ", sentenceWithBlank: "___ سَفِينَةُ الصَّحْرَاءِ.", sentenceFull: "الجَمَلُ سَفِينَةُ الصَّحْرَاءِ.", meanKurdish: "وشترەکە کەشتی بیابانە.", meanEnglish: "The camel is the ship of the desert.", meanTurkish: "Deve çölün gemisidir." },
-        { letter: "ح", type: "Moon", word: "الحَلِيبُ", sentenceWithBlank: "___ مُفِيدٌ لِلْعِظَامِ.", sentenceFull: "الحَلِيبُ مُفِيدٌ لِلْعِظَامِ.", meanKurdish: "شیر بەسوودە بۆ ئێسکەکان.", meanEnglish: "Milk is good for the bones.", meanTurkish: "Süt kemikler için faydalıdır." },
-        { letter: "خ", type: "Moon", word: "الخَارُوفُ", sentenceWithBlank: "___ يَرْعَى فِي المَرْجِ.", sentenceFull: "الخَارُوفُ يَرْعَى فِي المَرْجِ.", meanKurdish: "مەڕەکە لە لەوەڕگادا دەلەوەڕێت.", meanEnglish: "The sheep grazes in the meadow.", meanTurkish: "Koyun çayırda otluyor." },
-        { letter: "د", type: "Sun", word: "الدُّبُّ", sentenceWithBlank: "___ يَنَامُ فِي الشِّتَاءِ.", sentenceFull: "الدُّبُّ يَنَامُ فِي الشِّتَاءِ.", meanKurdish: "پڕش لە زستاندا دەخەوێت.", meanEnglish: "The bear sleeps in winter.", meanTurkish: "Ayı kışın uyur." },
-        { letter: "ذ", type: "Sun", word: "الذَّهَبُ", sentenceWithBlank: "___ مَعْدِنٌ ثَمِينٌ.", sentenceFull: "الذَّهَبُ مَعْدِنٌ ثَمِينٌ.", meanKurdish: "زێڕ کانزایەکی بەنرخە.", meanEnglish: "Gold is a precious metal.", meanTurkish: "Altın değerli bir madendir." },
-        { letter: "ر", type: "Sun", word: "الرَّعْدُ", sentenceWithBlank: "___ صَوْتُهُ قَوِيٌّ.", sentenceFull: "الرَّعْدُ صَوْتُهُ قَوِيٌّ.", meanKurdish: "گرمەی هه‌ور بەهێزە.", meanEnglish: "The thunder sound is loud.", meanTurkish: "Gökgürültüsü sesi güçlüdür." },
-        { letter: "ز", type: "Sun", word: "الزَّيْتُونُ", sentenceWithBlank: "___ ثَمَرَةٌ مُبَارَكَةٌ.", sentenceFull: "الزَّيْتُونُ ثَمَرَةٌ مُبَارَكَةٌ.", meanKurdish: "زەیتوون میوەیەکی بەرەکەتدارە.", meanEnglish: "Olives are a blessed fruit.", meanTurkish: "Zeytin bereketli bir meyvedir." },
-        { letter: "س", type: "Sun", word: "السَّفِينَةُ", sentenceWithBlank: "___ تُبْحِرُ فِي البَحْرِ.", sentenceFull: "السَّفِينَةُ تُبْحِرُ فِي البَحْرِ.", meanKurdish: "کەشتییەکە لە دەریادا دەڕوات.", meanEnglish: "The ship is sailing in the sea.", meanTurkish: "Gemi denizde seyrediyor." },
-        { letter: "ص", type: "Sun", word: "الصَّقْرُ", sentenceWithBlank: "___ طَائِرٌ سَرِيعٌ.", sentenceFull: "الصَّقْرُ طَائِرٌ سَرِيعٌ.", meanKurdish: "داڵەکە (باشۆکە) فڕۆکەیەکی خێرایە.", meanEnglish: "The falcon is a fast bird.", meanTurkish: "Doğan hızlı bir kuştur." },
-        { letter: "ض", type: "Sun", word: "الضَّبَابُ", sentenceWithBlank: "___ يُغَطِّي المَدِينَةَ.", sentenceFull: "الضَّبَابُ يُغَطِّي المَدِينَةَ.", meanKurdish: "تەمەکە شارەکەی داپۆشیوە.", meanEnglish: "The fog covers the city.", meanTurkish: "Sis şehri kaplıyor." },
-        { letter: "ط", type: "Sun", word: "الطَّبِيبُ", sentenceWithBlank: "___ يُعَالِجُ المَرْضَى.", sentenceFull: "الطَّبِيبُ يُعَالِجُ المَرْضَى.", meanKurdish: "پزیشکەکە نەخۆشەکان چارەسەر دەکات.", meanEnglish: "The doctor treats patients.", meanTurkish: "Doktor hastaları tedavi eder." },
-        { letter: "ع", type: "Moon", word: "العِنَبُ", sentenceWithBlank: "___ فَاكِهَةٌ صَيْفِيَّةٌ.", sentenceFull: "العِنَبُ فَاكِهَةٌ صَيْفِيَّةٌ.", meanKurdish: "تری میوەیەکی هاوینەیە.", meanEnglish: "Grapes are a summer fruit.", meanTurkish: "Üzüm bir yaz meyvesidir." },
-        { letter: "ف", type: "Moon", word: "الفَرَاشَةُ", sentenceWithBlank: "___ مَلُّوَنَةٌ وَجَمِيلَةٌ.", sentenceFull: "الفَرَاشَةُ مَلُّوَنَةٌ وَجَمِيلَةٌ.", meanKurdish: "پەپوولەکە ڕەنگاوڕەنگ و جوانە.", meanEnglish: "The butterfly is colorful and beautiful.", meanTurkish: "Kelebek renkli ve güzeldir." },
-        { letter: "ن", type: "Sun", word: "النَّخْلَةُ", sentenceWithBlank: "___ شَجَرَةٌ طَوِيلَةٌ.", sentenceFull: "النَّخْلَةُ شَجَرَةٌ طَوِيلَةٌ.", meanKurdish: "دار خورماکە دارێکی بەرزە.", meanEnglish: "The palm tree is tall.", meanTurkish: "Hurma ağacı uzundur." }
+        { letter: "ت", type: "Sun", word: "التَّمْرُ", sentenceWithBlank: "___ لَذِيذٌ وَمُفِيدٌ.", sentenceFull: "التَّمْرُ لَذِيذٌ وَمُفِيدٌ.", meanEnglish: "The dates are delicious and useful." },
+        { letter: "ر", type: "Sun", word: "الرَّجُلُ", sentenceWithBlank: "___ يَمْشِي فِي الشَّارِعِ.", sentenceFull: "الرَّجُلُ يَمْشِي فِي الشَّارِعِ.", meanEnglish: "The man is walking in the street." },
+        { letter: "س", type: "Sun", word: "السَّمَاءُ", sentenceWithBlank: "___ صَافِيَةٌ اليَوْمَ.", sentenceFull: "السَّمَاءُ صَافِيَةٌ اليَوْمَ.", meanEnglish: "The sky is clear today." },
+        { letter: "ش", type: "Sun", word: "الشَّمْسُ", sentenceWithBlank: "___ مُشْرِقَةٌ فِي الصَّبَاحِ.", sentenceFull: "الشَّمْسُ مُشْرِقَةٌ فِي الصَّبَاحِ.", meanEnglish: "The sun is bright in the morning." },
+        { letter: "ن", type: "Sun", word: "النَّجْمُ", sentenceWithBlank: "___ يَلْمَعُ فِي اللَّيْلِ.", sentenceFull: "النَّجْمُ يَلْمَعُ فِي اللَّيْلِ.", meanEnglish: "The star shines at night." },
+        { letter: "ب", type: "Moon", word: "البَابُ", sentenceWithBlank: "___ مَفْتُوحٌ الآنَ.", sentenceFull: "البَابُ مَفْتُوحٌ الآنَ.", meanEnglish: "The door is open now." },
+        { letter: "ج", type: "Moon", word: "الجَبَلُ", sentenceWithBlank: "___ عَالٍ جِدًّا.", sentenceFull: "الجَبَلُ عَالٍ جِدًّا.", meanEnglish: "The mountain is very high." },
+        { letter: "ع", type: "Moon", word: "العَيْنُ", sentenceWithBlank: "___ تَرَى الأَلْوَانَ.", sentenceFull: "العَيْنُ تَرَى الأَلْوَانَ.", meanEnglish: "The eye sees colors." },
+        { letter: "ق", type: "Moon", word: "القَمَرُ", sentenceWithBlank: "___ جَمِيلٌ فِي اللَّيْلِ.", sentenceFull: "القَمَرُ جَمِيلٌ فِي اللَّيْلِ.", meanEnglish: "The moon is beautiful at night." },
+        { letter: "ك", type: "Moon", word: "الكِتَابُ", sentenceWithBlank: "___ عَلَى الطَّاوِلَةِ.", sentenceFull: "الكِتَابُ عَلَى الطَّاوِلَةِ.", meanEnglish: "The book is on the table." }
     ];
 
     const gridContainer = document.getElementById("letterGrid");
@@ -397,12 +451,21 @@
     let timeLeft = QUESTION_TIME;
     let timerInterval = null;
 
-    // Matching Game state variables
     let selectedLetterCard = null;
     let selectedWordCard = null;
     let matchedPairsCount = 0;
 
-    // Dark/Light Theme Toggle
+    let currentUser = null;
+    let isSignUpMode = false;
+
+    window.onload = function() {
+        const savedUser = localStorage.getItem("app_current_user");
+        if (savedUser) {
+            currentUser = savedUser;
+        }
+        updateAuthHeader();
+    };
+
     function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute("data-theme");
         const toggleBtn = document.getElementById("themeToggleBtn");
@@ -416,7 +479,97 @@
         }
     }
 
-    // Render interactive buttons for Learn Mode
+    function updateAuthHeader() {
+        const userInfo = document.getElementById("userInfo");
+        const authBtn = document.getElementById("authBtn");
+
+        if (currentUser) {
+            userInfo.innerText = `👤 ${currentUser}`;
+            authBtn.innerText = "Sign Out";
+            document.getElementById("playerNameInput").value = currentUser;
+        } else {
+            userInfo.innerText = "";
+            authBtn.innerText = "Sign In";
+            document.getElementById("playerNameInput").value = "";
+        }
+    }
+
+    function handleAuthClick() {
+        if (currentUser) {
+            currentUser = null;
+            localStorage.removeItem("app_current_user");
+            updateAuthHeader();
+        } else {
+            toggleAuthView(true);
+        }
+    }
+
+    function toggleAuthView(showAuth) {
+        const authSection = document.getElementById("authSection");
+        const appSection = document.getElementById("appSection");
+
+        if (showAuth) {
+            authSection.classList.remove("hidden");
+            appSection.classList.add("hidden");
+            stopTimer();
+        } else {
+            authSection.classList.add("hidden");
+            appSection.classList.remove("hidden");
+        }
+    }
+
+    function toggleAuthMode(mode) {
+        isSignUpMode = mode === 'signup';
+        document.getElementById("authTitle").innerText = isSignUpMode ? "Sign Up" : "Sign In";
+        document.getElementById("submitAuthBtn").innerText = isSignUpMode ? "Sign Up" : "Sign In";
+        document.getElementById("authMsg").innerText = "";
+        
+        const toggleText = document.getElementById("authToggleText");
+        if (isSignUpMode) {
+            toggleText.innerHTML = `Already have an account? <span onclick="toggleAuthMode('signin')">Sign In</span>`;
+        } else {
+            toggleText.innerHTML = `Don't have an account? <span onclick="toggleAuthMode('signup')">Sign Up</span>`;
+        }
+    }
+
+    function submitAuth() {
+        const username = document.getElementById("usernameInput").value.trim();
+        const password = document.getElementById("passwordInput").value.trim();
+        const authMsg = document.getElementById("authMsg");
+
+        if (!username || !password) {
+            authMsg.style.color = "#ef4444";
+            authMsg.innerText = "Please fill in all fields.";
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem("app_users") || "{}");
+
+        if (isSignUpMode) {
+            if (users[username]) {
+                authMsg.style.color = "#ef4444";
+                authMsg.innerText = "Username already exists!";
+                return;
+            }
+            users[username] = { password: password, highScore: 0 };
+            localStorage.setItem("app_users", JSON.stringify(users));
+            currentUser = username;
+            localStorage.setItem("app_current_user", currentUser);
+            updateAuthHeader();
+            toggleAuthView(false);
+        } else {
+            if (!users[username] || users[username].password !== password) {
+                authMsg.style.color = "#ef4444";
+                authMsg.innerText = "Invalid username or password!";
+                return;
+            }
+            currentUser = username;
+            localStorage.setItem("app_current_user", currentUser);
+            updateAuthHeader();
+            toggleAuthView(false);
+        }
+    }
+
     const uniqueLetters = [...new Set(lettersData.map(item => item.letter))];
     uniqueLetters.forEach(letter => {
         let btn = document.createElement("button");
@@ -432,15 +585,14 @@
 
     function selectLetter(item) {
         let isSun = item.type === "Sun";
-        let typeArabic = isSun ? "حرف شمسي" : "حرف قمري";
-        let typeKurdish = isSun ? "پیتی شەمسی" : "پیتی قەمەری";
+        let typeText = isSun ? "Sun Letter ☀️" : "Moon Letter 🌙";
         
         displayBox.className = isSun ? "sun" : "moon";
         displayBox.innerHTML = `
-            پیتی (${item.letter}) - ${typeKurdish} / ${typeArabic}<br>
-            وشە: <b>${item.word}</b><br>
-            ڕستە: ${item.sentenceFull}<br>
-            کوردی: ${item.meanKurdish} | English: ${item.meanEnglish}
+            Letter: ( <b>${item.letter}</b> ) - Type: ${typeText}<br>
+            Word: <b>${item.word}</b><br>
+            Sentence: ${item.sentenceFull}<br>
+            English: ${item.meanEnglish}
         `;
     }
 
@@ -448,20 +600,24 @@
         const learnBtn = document.getElementById("learnModeBtn");
         const quizBtn = document.getElementById("quizModeBtn");
         const matchBtn = document.getElementById("matchModeBtn");
+        const leaderboardBtn = document.getElementById("leaderboardModeBtn");
         
         const learnContainer = document.getElementById("learnContainer");
         const quizContainer = document.getElementById("quizContainer");
         const matchContainer = document.getElementById("matchContainer");
+        const leaderboardContainer = document.getElementById("leaderboardContainer");
 
         stopTimer();
 
         learnBtn.className = "mode-btn inactive-mode";
         quizBtn.className = "mode-btn inactive-mode";
         matchBtn.className = "mode-btn inactive-mode";
+        leaderboardBtn.className = "mode-btn inactive-mode";
         
         learnContainer.classList.add("hidden");
         quizContainer.classList.add("hidden");
         matchContainer.classList.add("hidden");
+        leaderboardContainer.classList.add("hidden");
 
         if (mode === 'learn') {
             learnBtn.className = "mode-btn active-mode";
@@ -474,10 +630,13 @@
             matchBtn.className = "mode-btn active-mode";
             matchContainer.classList.remove("hidden");
             startMatchingGame();
+        } else if (mode === 'leaderboard') {
+            leaderboardBtn.className = "mode-btn active-mode";
+            leaderboardContainer.classList.remove("hidden");
+            updateLeaderboardUI();
         }
     }
 
-    /* --- Quiz Mode Logic --- */
     function nextQuestion() {
         stopTimer();
         document.getElementById("quizFeedback").innerText = "";
@@ -485,12 +644,12 @@
         const randomIndex = Math.floor(Math.random() * lettersData.length);
         currentQuizItem = lettersData[randomIndex];
 
-        document.getElementById("quizQuestion").innerText = `جۆری پیتی (${currentQuizItem.letter}) چییە لەم وشەیەدا؟ / ما نوع الحرف؟`;
+        document.getElementById("quizQuestion").innerText = `What type of letter is (${currentQuizItem.letter}) in this word?`;
         document.getElementById("quizWordDisplay").innerText = currentQuizItem.word;
         
         const sentenceDisplay = document.getElementById("quizSentenceDisplay");
         sentenceDisplay.style.display = "block";
-        sentenceDisplay.innerHTML = `💬 <b>ڕستە:</b> <span class="blank-space">${currentQuizItem.sentenceWithBlank}</span><br><small>(${currentQuizItem.meanKurdish})</small>`;
+        sentenceDisplay.innerHTML = `💬 <b>Sentence:</b> <span class="blank-space">${currentQuizItem.sentenceWithBlank}</span><br><small>(${currentQuizItem.meanEnglish})</small>`;
 
         startTimer();
     }
@@ -523,17 +682,14 @@
         
         const percentage = (timeLeft / QUESTION_TIME) * 100;
         timerBar.style.width = percentage + "%";
-        timerText.innerText = `کات: ${timeLeft} / الوقت: ${timeLeft}`;
+        timerText.innerText = `Time: ${timeLeft}s`;
     }
 
     function handleTimeout() {
         totalQuestions++;
         const feedbackBox = document.getElementById("quizFeedback");
         feedbackBox.style.color = "#ef4444";
-        let correctKu = currentQuizItem.type === "Sun" ? "شەمسی" : "قەمەری";
-        let correctAr = currentQuizItem.type === "Sun" ? "شمسي" : "قمري";
-        
-        feedbackBox.innerText = `کاتی تەواو بوو! ⏰ (وەڵامی ڕاست: ${correctKu} / ${correctAr})`;
+        feedbackBox.innerText = `Time's up! ⏰ (Correct answer: ${currentQuizItem.type} Letter)`;
 
         document.getElementById("score").innerText = score;
         document.getElementById("totalQuestions").innerText = totalQuestions;
@@ -553,12 +709,15 @@
         if (selectedType === currentQuizItem.type) {
             score++;
             feedbackBox.style.color = "#22c55e";
-            feedbackBox.innerText = "ڕاستە! ✅ إجابة صحيحة";
+            feedbackBox.innerText = "Correct! ✅";
+            
+            // Auto-save score if logged in
+            if (currentUser) {
+                saveUserHighScore(currentUser, score);
+            }
         } else {
             feedbackBox.style.color = "#ef4444";
-            let correctKu = currentQuizItem.type === "Sun" ? "شەمسی" : "قەمەری";
-            let correctAr = currentQuizItem.type === "Sun" ? "شمسي" : "قمري";
-            feedbackBox.innerText = `هەڵەیە! ❌ إجابة خاطئة (وەڵامی ڕاست: ${correctKu} / ${correctAr})`;
+            feedbackBox.innerText = `Incorrect! ❌ (Correct answer: ${currentQuizItem.type} Letter)`;
         }
 
         document.getElementById("score").innerText = score;
@@ -567,6 +726,90 @@
         setTimeout(() => {
             nextQuestion();
         }, 1500);
+    }
+
+    /* --- Score & Leaderboard Management --- */
+    function getLeaderboardData() {
+        return JSON.parse(localStorage.getItem("app_leaderboard") || "[]");
+    }
+
+    function saveUserHighScore(name, newScore) {
+        let leaderboard = getLeaderboardData();
+        let existingIndex = leaderboard.findIndex(entry => entry.name.toLowerCase() === name.toLowerCase());
+
+        if (existingIndex !== -1) {
+            if (newScore > leaderboard[existingIndex].score) {
+                leaderboard[existingIndex].score = newScore;
+            }
+        } else {
+            leaderboard.push({ name: name, score: newScore });
+        }
+
+        localStorage.setItem("app_leaderboard", JSON.stringify(leaderboard));
+    }
+
+    function saveScoreToLeaderboard() {
+        const nameInput = document.getElementById("playerNameInput");
+        const playerName = nameInput.value.trim();
+        const msg = document.getElementById("saveScoreMsg");
+
+        if (!playerName) {
+            msg.style.color = "#ef4444";
+            msg.innerText = "Please enter a name first!";
+            return;
+        }
+
+        saveUserHighScore(playerName, score);
+        msg.style.color = "#22c55e";
+        msg.innerText = `Score of ${score} added to Leaderboard! 🏆`;
+    }
+
+    function addManualScore() {
+        const name = document.getElementById("manualNameInput").value.trim();
+        const val = parseInt(document.getElementById("manualScoreInput").value, 10);
+
+        if (name && !isNaN(val)) {
+            saveUserHighScore(name, val);
+            document.getElementById("manualNameInput").value = "";
+            document.getElementById("manualScoreInput").value = "";
+            updateLeaderboardUI();
+        }
+    }
+
+    function updateLeaderboardUI() {
+        const tbody = document.getElementById("leaderboardBody");
+        tbody.innerHTML = "";
+
+        let leaderboard = getLeaderboardData();
+        leaderboard.sort((a, b) => b.score - a.score);
+
+        if (leaderboard.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3">No scores added yet!</td></tr>`;
+            return;
+        }
+
+        leaderboard.forEach((entry, index) => {
+            let rankSymbol = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : index + 1;
+            let isCurrent = (currentUser && entry.name.toLowerCase() === currentUser.toLowerCase()) 
+                ? "style='font-weight: bold; background-color: rgba(99, 102, 241, 0.15);'" 
+                : "";
+            
+            let row = `
+                <tr ${isCurrent}>
+                    <td>${rankSymbol}</td>
+                    <td>${entry.name}</td>
+                    <td>${entry.score}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    function clearLeaderboard() {
+        if (confirm("Are you sure you want to clear the leaderboard?")) {
+            localStorage.removeItem("app_leaderboard");
+            updateLeaderboardUI();
+        }
     }
 
     /* --- Matching Game Logic --- */
@@ -583,7 +826,6 @@
         lettersCol.innerHTML = "";
         wordsCol.innerHTML = "";
 
-        // Pick 4 random distinct items
         let shuffledData = [...lettersData].sort(() => 0.5 - Math.random());
         let selectedItems = [];
         let usedLetters = new Set();
@@ -596,24 +838,20 @@
             if (selectedItems.length === 4) break;
         }
 
-        // Prepare letter cards and word cards separately
         let letterCardsData = selectedItems.map(item => ({ letter: item.letter, id: item.letter }));
         let wordCardsData = selectedItems.map(item => ({ word: item.word, id: item.letter }));
 
-        // Shuffle right column (words)
         wordCardsData.sort(() => 0.5 - Math.random());
 
-        // Render Left Column (Letters)
         letterCardsData.forEach(data => {
             let card = document.createElement("div");
             card.className = "match-card";
-            card.innerText = `پیتی (${data.letter})`;
+            card.innerText = `Letter (${data.letter})`;
             card.dataset.id = data.id;
             card.onclick = () => selectMatchingCard(card, 'letter');
             lettersCol.appendChild(card);
         });
 
-        // Render Right Column (Words)
         wordCardsData.forEach(data => {
             let card = document.createElement("div");
             card.className = "match-card";
@@ -637,12 +875,10 @@
             card.classList.add("selected");
         }
 
-        // Check for a match if both sides are selected
         if (selectedLetterCard && selectedWordCard) {
             const feedback = document.getElementById("matchFeedback");
 
             if (selectedLetterCard.dataset.id === selectedWordCard.dataset.id) {
-                // Correct match
                 selectedLetterCard.classList.remove("selected");
                 selectedWordCard.classList.remove("selected");
 
@@ -650,19 +886,18 @@
                 selectedWordCard.classList.add("matched");
 
                 feedback.style.color = "#22c55e";
-                feedback.innerText = "یەکگونجاوە! ✅ مطابقة صحيحة";
+                feedback.innerText = "Matched correctly! ✅";
 
                 selectedLetterCard = null;
                 selectedWordCard = null;
                 matchedPairsCount++;
 
                 if (matchedPairsCount === 4) {
-                    feedback.innerText = "ئافەرین! هەمووت ڕاست بەستەوە 🎉 ممتاز! أكملت جميع المطابقات";
+                    feedback.innerText = "Great job! All pairs matched 🎉";
                 }
             } else {
-                // Incorrect match
                 feedback.style.color = "#ef4444";
-                feedback.innerText = "هەڵەیە! دووبارە هەوڵبدەرەوە ❌ غير متطابقين، حاول مجدداً";
+                feedback.innerText = "Not a match, try again! ❌";
 
                 let tempLetter = selectedLetterCard;
                 let tempWord = selectedWordCard;
