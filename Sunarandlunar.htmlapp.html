@@ -310,6 +310,7 @@
             <input type="text" id="usernameInput" placeholder="Username">
             <input type="password" id="passwordInput" placeholder="Password">
             <button id="submitAuthBtn" class="action-btn" onclick="submitAuth()">Sign In</button>
+            <button class="action-btn" style="background-color: #6b7280; margin-top: 0;" onclick="toggleAuthView(false)">Cancel</button>
             <div id="authMsg" style="font-size: 14px; font-weight: bold;"></div>
             <p class="auth-toggle-text" id="authToggleText">
                 Don't have an account? <span onclick="toggleAuthMode('signup')">Sign Up</span>
@@ -378,7 +379,6 @@
                 Score: <span id="score">0</span> / <span id="totalQuestions">0</span>
             </div>
 
-            <!-- Add Score to Leaderboard Section -->
             <div class="save-score-container">
                 <input type="text" id="playerNameInput" placeholder="Enter name to save score">
                 <button class="action-btn" style="margin-top:0;" onclick="saveScoreToLeaderboard()">Add Score to Leaderboard 🏆</button>
@@ -390,6 +390,12 @@
         <div id="matchContainer" class="hidden">
             <div id="match-box" class="neutral">
                 <p style="margin-top: 0;">Match the letters to their correct words</p>
+                
+                <!-- Score Display for Matching Quiz -->
+                <div style="margin-bottom: 15px; font-size: 18px; color: #6366f1;">
+                    Matching Score: <span id="matchScore">0</span> / 4
+                </div>
+
                 <div class="matching-grid">
                     <div class="match-column" id="lettersColumn"></div>
                     <div class="match-column" id="wordsColumn"></div>
@@ -453,15 +459,19 @@
 
     let selectedLetterCard = null;
     let selectedWordCard = null;
-    let matchedPairsCount = 0;
+    let matchScore = 0;
 
     let currentUser = null;
     let isSignUpMode = false;
 
     window.onload = function() {
-        const savedUser = localStorage.getItem("app_current_user");
-        if (savedUser) {
-            currentUser = savedUser;
+        try {
+            const savedUser = localStorage.getItem("app_current_user");
+            if (savedUser) {
+                currentUser = savedUser;
+            }
+        } catch(e) {
+            console.error("Storage read error", e);
         }
         updateAuthHeader();
     };
@@ -497,7 +507,9 @@
     function handleAuthClick() {
         if (currentUser) {
             currentUser = null;
-            localStorage.removeItem("app_current_user");
+            try {
+                localStorage.removeItem("app_current_user");
+            } catch(e) { console.error(e); }
             updateAuthHeader();
         } else {
             toggleAuthView(true);
@@ -533,8 +545,10 @@
     }
 
     function submitAuth() {
-        const username = document.getElementById("usernameInput").value.trim();
-        const password = document.getElementById("passwordInput").value.trim();
+        const usernameInput = document.getElementById("usernameInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const username = usernameInput ? usernameInput.value.trim() : "";
+        const password = passwordInput ? passwordInput.value.trim() : "";
         const authMsg = document.getElementById("authMsg");
 
         if (!username || !password) {
@@ -543,7 +557,12 @@
             return;
         }
 
-        let users = JSON.parse(localStorage.getItem("app_users") || "{}");
+        let users = {};
+        try {
+            users = JSON.parse(localStorage.getItem("app_users") || "{}");
+        } catch(e) {
+            users = {};
+        }
 
         if (isSignUpMode) {
             if (users[username]) {
@@ -552,9 +571,15 @@
                 return;
             }
             users[username] = { password: password, highScore: 0 };
-            localStorage.setItem("app_users", JSON.stringify(users));
-            currentUser = username;
-            localStorage.setItem("app_current_user", currentUser);
+            try {
+                localStorage.setItem("app_users", JSON.stringify(users));
+                currentUser = username;
+                localStorage.setItem("app_current_user", currentUser);
+            } catch(e) { console.error(e); }
+            
+            usernameInput.value = "";
+            passwordInput.value = "";
+            authMsg.innerText = "";
             updateAuthHeader();
             toggleAuthView(false);
         } else {
@@ -564,7 +589,13 @@
                 return;
             }
             currentUser = username;
-            localStorage.setItem("app_current_user", currentUser);
+            try {
+                localStorage.setItem("app_current_user", currentUser);
+            } catch(e) { console.error(e); }
+
+            usernameInput.value = "";
+            passwordInput.value = "";
+            authMsg.innerText = "";
             updateAuthHeader();
             toggleAuthView(false);
         }
@@ -711,7 +742,6 @@
             feedbackBox.style.color = "#22c55e";
             feedbackBox.innerText = "Correct! ✅";
             
-            // Auto-save score if logged in
             if (currentUser) {
                 saveUserHighScore(currentUser, score);
             }
@@ -730,7 +760,11 @@
 
     /* --- Score & Leaderboard Management --- */
     function getLeaderboardData() {
-        return JSON.parse(localStorage.getItem("app_leaderboard") || "[]");
+        try {
+            return JSON.parse(localStorage.getItem("app_leaderboard") || "[]");
+        } catch(e) {
+            return [];
+        }
     }
 
     function saveUserHighScore(name, newScore) {
@@ -745,12 +779,14 @@
             leaderboard.push({ name: name, score: newScore });
         }
 
-        localStorage.setItem("app_leaderboard", JSON.stringify(leaderboard));
+        try {
+            localStorage.setItem("app_leaderboard", JSON.stringify(leaderboard));
+        } catch(e) { console.error(e); }
     }
 
     function saveScoreToLeaderboard() {
         const nameInput = document.getElementById("playerNameInput");
-        const playerName = nameInput.value.trim();
+        const playerName = nameInput ? nameInput.value.trim() : "";
         const msg = document.getElementById("saveScoreMsg");
 
         if (!playerName) {
@@ -765,13 +801,15 @@
     }
 
     function addManualScore() {
-        const name = document.getElementById("manualNameInput").value.trim();
-        const val = parseInt(document.getElementById("manualScoreInput").value, 10);
+        const nameInput = document.getElementById("manualNameInput");
+        const scoreInput = document.getElementById("manualScoreInput");
+        const name = nameInput ? nameInput.value.trim() : "";
+        const val = scoreInput ? parseInt(scoreInput.value, 10) : NaN;
 
         if (name && !isNaN(val)) {
             saveUserHighScore(name, val);
-            document.getElementById("manualNameInput").value = "";
-            document.getElementById("manualScoreInput").value = "";
+            nameInput.value = "";
+            scoreInput.value = "";
             updateLeaderboardUI();
         }
     }
@@ -807,7 +845,9 @@
 
     function clearLeaderboard() {
         if (confirm("Are you sure you want to clear the leaderboard?")) {
-            localStorage.removeItem("app_leaderboard");
+            try {
+                localStorage.removeItem("app_leaderboard");
+            } catch(e) { console.error(e); }
             updateLeaderboardUI();
         }
     }
@@ -816,7 +856,8 @@
     function startMatchingGame() {
         selectedLetterCard = null;
         selectedWordCard = null;
-        matchedPairsCount = 0;
+        matchScore = 0;
+        document.getElementById("matchScore").innerText = matchScore;
         
         const feedback = document.getElementById("matchFeedback");
         feedback.innerText = "";
@@ -885,15 +926,20 @@
                 selectedLetterCard.classList.add("matched");
                 selectedWordCard.classList.add("matched");
 
+                matchScore++;
+                document.getElementById("matchScore").innerText = matchScore;
+
                 feedback.style.color = "#22c55e";
                 feedback.innerText = "Matched correctly! ✅";
 
                 selectedLetterCard = null;
                 selectedWordCard = null;
-                matchedPairsCount++;
 
-                if (matchedPairsCount === 4) {
-                    feedback.innerText = "Great job! All pairs matched 🎉";
+                if (matchScore === 4) {
+                    feedback.innerText = "Great job! Perfect score 4/4! 🎉";
+                    if (currentUser) {
+                        saveUserHighScore(currentUser, score + matchScore);
+                    }
                 }
             } else {
                 feedback.style.color = "#ef4444";
