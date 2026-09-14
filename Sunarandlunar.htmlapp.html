@@ -84,11 +84,11 @@
             transition: background 0.3s;
         }
 
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
+        .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 20px 0; }
         
         .letter-btn { 
             font-size: 20px; 
-            padding: 15px; 
+            padding: 12px; 
             border: 1px solid var(--border-color); 
             border-radius: 8px; 
             background: var(--btn-bg); 
@@ -156,12 +156,18 @@
             border-radius: 10px;
             border: 1px solid var(--border-color);
             text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
         }
         .reading-section h3 {
             margin-top: 0;
             text-align: center;
             font-size: 18px;
             color: var(--text-color);
+            position: sticky;
+            top: 0;
+            background-color: var(--reading-section-bg);
+            padding: 5px 0;
         }
         .reading-card {
             background-color: var(--reading-card-bg);
@@ -229,10 +235,33 @@
             font-size: 15px;
         }
 
+        .filter-container {
+            margin: 15px 0 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: var(--btn-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .filter-btn.active-filter {
+            background-color: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
         .leaderboard-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 10px;
             font-size: 15px;
         }
         .leaderboard-table th, .leaderboard-table td {
@@ -336,24 +365,77 @@
 
             <div class="reading-section">
                 <h3>📖 Reading Practice Sentences</h3>
+                
                 <div class="reading-card">
                     <div class="reading-text">
-                        <b>الشَّمْسُ</b> طَالِعَةٌ وَ<b>القَمَرُ</b> غَائِبٌ.
+                        1. <b>الشَّمْسُ</b> طَالِعَةٌ وَ<b>القَمَرُ</b> غَائِبٌ.
                         <small>English: The sun is rising and the moon is absent.</small>
                     </div>
                 </div>
+
                 <div class="reading-card">
                     <div class="reading-text">
-                        <b>الوَالِدُ</b> يَكْتُبُ فِي <b>الكِتَابِ</b>.
+                        2. <b>الوَالِدُ</b> يَكْتُبُ فِي <b>الكِتَابِ</b>.
                         <small>English: The father writes in the book.</small>
                     </div>
                 </div>
+
                 <div class="reading-card">
                     <div class="reading-text">
-                        <b>الطَّالِبُ</b> يَذْهَبُ إِلَى <b>المَدْرَسَةِ</b>.
+                        3. <b>الطَّالِبُ</b> يَذْهَبُ إِلَى <b>المَدْرَسَةِ</b>.
                         <small>English: The student goes to school.</small>
                     </div>
                 </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        4. <b>الرَّجُلُ</b> يَشْرَبُ <b>المَاءَ</b> البَارِدَ.
+                        <small>English: The man drinks cold water.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        5. <b>السَّمَاءُ</b> صَافِيَةٌ وَ<b>النَّجْمُ</b> يَلْمَعُ.
+                        <small>English: The sky is clear and the star shines.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        6. <b>البَابُ</b> مَفْتُوحٌ وَ<b>الجَبَلُ</b> عَالٍ.
+                        <small>English: The door is open and the mountain is high.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        7. <b>التَّمْرُ</b> لَذِيذٌ وَ<b>العَيْنُ</b> تَرَاهُ.
+                        <small>English: The date fruit is delicious and the eye sees it.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        8. <b>الزَّهْرَةُ</b> جَمِيلَةٌ فِي <b>الحَدِيقَةِ</b>.
+                        <small>English: The flower is beautiful in the garden.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        9. <b>الضَّيْفُ</b> يَأْكُلُ <b>الخُبْزَ</b>.
+                        <small>English: The guest is eating the bread.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        10. <b>الطَّبِيبُ</b> يَفْحَصُ <b>الوَلَدَ</b>.
+                        <small>English: The doctor examines the boy.</small>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -391,7 +473,6 @@
             <div id="match-box" class="neutral">
                 <p style="margin-top: 0;">Match the letters to their correct words</p>
                 
-                <!-- Score Display for Matching Quiz -->
                 <div style="margin-bottom: 15px; font-size: 18px; color: #6366f1;">
                     Matching Score: <span id="matchScore">0</span> / 4
                 </div>
@@ -409,6 +490,15 @@
         <div id="leaderboardContainer" class="hidden">
             <div id="leaderboard-box" class="neutral">
                 <h3 style="margin: 0;">🏆 Top Performers</h3>
+
+                <!-- Time Filter Controls -->
+                <div class="filter-container">
+                    <button id="filterAllBtn" class="filter-btn active-filter" onclick="setLeaderboardFilter('all')">All-Time</button>
+                    <button id="filterTodayBtn" class="filter-btn" onclick="setLeaderboardFilter('today')">Today</button>
+                    <button id="filterYesterdayBtn" class="filter-btn" onclick="setLeaderboardFilter('yesterday')">Yesterday</button>
+                    <button id="filterWeekBtn" class="filter-btn" onclick="setLeaderboardFilter('weekly')">This Week</button>
+                    <button id="filterMonthBtn" class="filter-btn" onclick="setLeaderboardFilter('monthly')">This Month</button>
+                </div>
 
                 <div class="save-score-container" style="margin-bottom: 15px;">
                     <input type="text" id="manualNameInput" placeholder="Name">
@@ -434,16 +524,35 @@
 
 <script>
     const lettersData = [
+        // Sun Letters ☀️
         { letter: "ت", type: "Sun", word: "التَّمْرُ", sentenceWithBlank: "___ لَذِيذٌ وَمُفِيدٌ.", sentenceFull: "التَّمْرُ لَذِيذٌ وَمُفِيدٌ.", meanEnglish: "The dates are delicious and useful." },
+        { letter: "ث", type: "Sun", word: "الثَّلْجُ", sentenceWithBlank: "___ بَارِدٌ جِدًّا.", sentenceFull: "الثَّلْجُ بَارِدٌ جِدًّا.", meanEnglish: "The ice/snow is very cold." },
+        { letter: "د", type: "Sun", word: "الدَّرْسُ", sentenceWithBlank: "___ سَهْلٌ وَمُفِيدٌ.", sentenceFull: "الدَّرْسُ سَهْلٌ وَمُفِيدٌ.", meanEnglish: "The lesson is easy and useful." },
+        { letter: "ذ", type: "Sun", word: "الذَّهَبُ", sentenceWithBlank: "___ ثَمِينٌ جِدًّا.", sentenceFull: "الذَّهَبُ ثَمِينٌ جِدًّا.", meanEnglish: "The gold is very precious." },
         { letter: "ر", type: "Sun", word: "الرَّجُلُ", sentenceWithBlank: "___ يَمْشِي فِي الشَّارِعِ.", sentenceFull: "الرَّجُلُ يَمْشِي فِي الشَّارِعِ.", meanEnglish: "The man is walking in the street." },
+        { letter: "ز", type: "Sun", word: "الزَّهْرَةُ", sentenceWithBlank: "___ جَمِيلَةٌ فِي الحَدِيقَةِ.", sentenceFull: "الزَّهْرَةُ جَمِيلَةٌ فِي الحَدِيقَةِ.", meanEnglish: "The flower is beautiful in the garden." },
         { letter: "س", type: "Sun", word: "السَّمَاءُ", sentenceWithBlank: "___ صَافِيَةٌ اليَوْمَ.", sentenceFull: "السَّمَاءُ صَافِيَةٌ اليَوْمَ.", meanEnglish: "The sky is clear today." },
         { letter: "ش", type: "Sun", word: "الشَّمْسُ", sentenceWithBlank: "___ مُشْرِقَةٌ فِي الصَّبَاحِ.", sentenceFull: "الشَّمْسُ مُشْرِقَةٌ فِي الصَّبَاحِ.", meanEnglish: "The sun is bright in the morning." },
+        { letter: "ص", type: "Sun", word: "الصَّابُونُ", sentenceWithBlank: "___ يُنَظِّفُ اليَدَيْنِ.", sentenceFull: "الصَّابُونُ يُنَظِّفُ اليَدَيْنِ.", meanEnglish: "The soap cleans the hands." },
+        { letter: "ض", type: "Sun", word: "الضَّيْفُ", sentenceWithBlank: "___ يَصِلُ فِي المَسَاءِ.", sentenceFull: "الضَّيْفُ يَصِلُ فِي المَسَاءِ.", meanEnglish: "The guest arrives in the evening." },
+        { letter: "ط", type: "Sun", word: "الطَّبِيبُ", sentenceWithBlank: "___ يَفْحَصُ المَرِيضَ.", sentenceFull: "الطَّبِيبُ يَفْحَصُ المَرِيضَ.", meanEnglish: "The doctor examines the patient." },
+        { letter: "ظ", type: "Sun", word: "الظَّرْفُ", sentenceWithBlank: "___ عَلَى المَكْتَبِ.", sentenceFull: "الظَّرْفُ عَلَى المَكْتَبِ.", meanEnglish: "The envelope is on the desk." },
+        { letter: "ل", type: "Sun", word: "اللَّبَنُ", sentenceWithBlank: "___ مُفِيدٌ لِلصِّحَّةِ.", sentenceFull: "اللَّبَنُ مُفِيدٌ لِلصِّحَّةِ.", meanEnglish: "The milk is beneficial for health." },
         { letter: "ن", type: "Sun", word: "النَّجْمُ", sentenceWithBlank: "___ يَلْمَعُ فِي اللَّيْلِ.", sentenceFull: "النَّجْمُ يَلْمَعُ فِي اللَّيْلِ.", meanEnglish: "The star shines at night." },
+
+        // Moon Letters 🌙
+        { letter: "أ", type: "Moon", word: "الأَبُ", sentenceWithBlank: "___ يَقْرَأُ الصَّحِيفَةَ.", sentenceFull: "الأَبُ يَقْرَأُ الصَّحِيفَةَ.", meanEnglish: "The father reads the newspaper." },
         { letter: "ب", type: "Moon", word: "البَابُ", sentenceWithBlank: "___ مَفْتُوحٌ الآنَ.", sentenceFull: "البَابُ مَفْتُوحٌ الآنَ.", meanEnglish: "The door is open now." },
         { letter: "ج", type: "Moon", word: "الجَبَلُ", sentenceWithBlank: "___ عَالٍ جِدًّا.", sentenceFull: "الجَبَلُ عَالٍ جِدًّا.", meanEnglish: "The mountain is very high." },
+        { letter: "ح", type: "Moon", word: "الحَدِيقَةُ", sentenceWithBlank: "___ وَاسِعَةٌ وَجَمِيلَةٌ.", sentenceFull: "الحَدِيقَةُ وَاسِعَةٌ وَجَمِيلَةٌ.", meanEnglish: "The garden is spacious and beautiful." },
+        { letter: "خ", type: "Moon", word: "الخُبْزُ", sentenceWithBlank: "___ طَازَجٌ وَلَذِيذٌ.", sentenceFull: "الخُبْزُ طَازَجٌ وَلَذِيذٌ.", meanEnglish: "The bread is fresh and delicious." },
         { letter: "ع", type: "Moon", word: "العَيْنُ", sentenceWithBlank: "___ تَرَى الأَلْوَانَ.", sentenceFull: "العَيْنُ تَرَى الأَلْوَانَ.", meanEnglish: "The eye sees colors." },
+        { letter: "ف", type: "Moon", word: "الفَرَاشَةُ", sentenceWithBlank: "___ تُطِيرُ فَوْقَ الزَّهْرَةِ.", sentenceFull: "الفَرَاشَةُ تُطِيرُ فَوْقَ الزَّهْرَةِ.", meanEnglish: "The butterfly flies over the flower." },
         { letter: "ق", type: "Moon", word: "القَمَرُ", sentenceWithBlank: "___ جَمِيلٌ فِي اللَّيْلِ.", sentenceFull: "القَمَرُ جَمِيلٌ فِي اللَّيْلِ.", meanEnglish: "The moon is beautiful at night." },
-        { letter: "ك", type: "Moon", word: "الكِتَابُ", sentenceWithBlank: "___ عَلَى الطَّاوِلَةِ.", sentenceFull: "الكِتَابُ عَلَى الطَّاوِلَةِ.", meanEnglish: "The book is on the table." }
+        { letter: "ك", type: "Moon", word: "الكِتَابُ", sentenceWithBlank: "___ عَلَى الطَّاوِلَةِ.", sentenceFull: "الكِتَابُ عَلَى الطَّاوِلَةِ.", meanEnglish: "The book is on the table." },
+        { letter: "م", type: "Moon", word: "المَاءُ", sentenceWithBlank: "___ نَقِيٌّ وَبَارِدٌ.", sentenceFull: "المَاءُ نَقِيٌّ وَبَارِدٌ.", meanEnglish: "The water is pure and cold." },
+        { letter: "و", type: "Moon", word: "الوَلَدُ", sentenceWithBlank: "___ يَلْعَبُ فِي الحَدِيقَةِ.", sentenceFull: "الوَلَدُ يَلْعَبُ فِي الحَدِيقَةِ.", meanEnglish: "The boy plays in the garden." },
+        { letter: "ي", type: "Moon", word: "اليَوْمُ", sentenceWithBlank: "___ جَمِيلٌ وَمُشْرِقٌ.", sentenceFull: "اليَوْمُ جَمِيلٌ وَمُشْرِقٌ.", meanEnglish: "The day is beautiful and bright." }
     ];
 
     const gridContainer = document.getElementById("letterGrid");
@@ -463,6 +572,7 @@
 
     let currentUser = null;
     let isSignUpMode = false;
+    let currentLeaderboardFilter = 'all';
 
     window.onload = function() {
         try {
@@ -769,14 +879,16 @@
 
     function saveUserHighScore(name, newScore) {
         let leaderboard = getLeaderboardData();
+        const now = Date.now();
         let existingIndex = leaderboard.findIndex(entry => entry.name.toLowerCase() === name.toLowerCase());
 
         if (existingIndex !== -1) {
             if (newScore > leaderboard[existingIndex].score) {
                 leaderboard[existingIndex].score = newScore;
+                leaderboard[existingIndex].timestamp = now;
             }
         } else {
-            leaderboard.push({ name: name, score: newScore });
+            leaderboard.push({ name: name, score: newScore, timestamp: now });
         }
 
         try {
@@ -814,15 +926,48 @@
         }
     }
 
+    function setLeaderboardFilter(filterType) {
+        currentLeaderboardFilter = filterType;
+        document.getElementById("filterAllBtn").className = filterType === 'all' ? "filter-btn active-filter" : "filter-btn";
+        document.getElementById("filterTodayBtn").className = filterType === 'today' ? "filter-btn active-filter" : "filter-btn";
+        document.getElementById("filterYesterdayBtn").className = filterType === 'yesterday' ? "filter-btn active-filter" : "filter-btn";
+        document.getElementById("filterWeekBtn").className = filterType === 'weekly' ? "filter-btn active-filter" : "filter-btn";
+        document.getElementById("filterMonthBtn").className = filterType === 'monthly' ? "filter-btn active-filter" : "filter-btn";
+        updateLeaderboardUI();
+    }
+
     function updateLeaderboardUI() {
         const tbody = document.getElementById("leaderboardBody");
         tbody.innerHTML = "";
 
         let leaderboard = getLeaderboardData();
+        const now = new Date();
+        
+        // Boundaries for Date Comparisons
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        const yesterdayStart = todayStart - (24 * 60 * 60 * 1000);
+        const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
+        const ONE_MONTH = 30 * 24 * 60 * 60 * 1000;
+
+        // Apply Time Filter
+        leaderboard = leaderboard.filter(entry => {
+            const entryTime = entry.timestamp || 0;
+            if (currentLeaderboardFilter === 'today') {
+                return entryTime >= todayStart;
+            } else if (currentLeaderboardFilter === 'yesterday') {
+                return entryTime >= yesterdayStart && entryTime < todayStart;
+            } else if (currentLeaderboardFilter === 'weekly') {
+                return (now.getTime() - entryTime) <= ONE_WEEK;
+            } else if (currentLeaderboardFilter === 'monthly') {
+                return (now.getTime() - entryTime) <= ONE_MONTH;
+            }
+            return true; // All-time
+        });
+
         leaderboard.sort((a, b) => b.score - a.score);
 
         if (leaderboard.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="3">No scores added yet!</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="3">No scores found for this period!</td></tr>`;
             return;
         }
 
