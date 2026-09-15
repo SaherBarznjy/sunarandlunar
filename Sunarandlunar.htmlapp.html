@@ -22,6 +22,7 @@
             --match-btn-correct: #bbf7d0;
             --input-bg: #ffffff;
             --table-header-bg: #e5e7eb;
+            --mc-btn-bg: #f8fafc;
         }
 
         [data-theme="dark"] {
@@ -41,6 +42,7 @@
             --match-btn-correct: #166534;
             --input-bg: #374151;
             --table-header-bg: #4b5563;
+            --mc-btn-bg: #374151;
         }
 
         body { 
@@ -98,7 +100,7 @@
         }
         .letter-btn:hover { background: var(--btn-hover); }
 
-        #display-box, #quiz-box, #match-box, #leaderboard-box { margin-top: 20px; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; line-height: 1.6; }
+        #display-box, #quiz-box, #match-box, #mc-quiz-box, #leaderboard-box { margin-top: 20px; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; line-height: 1.6; }
         .sun { background-color: #fef3c7; color: #d97706; border: 1px solid #f59e0b; }
         .moon { background-color: #dbeafe; color: #2563eb; border: 1px solid #3b82f6; }
         .neutral { background-color: var(--btn-bg); color: var(--text-color); border: 1px solid var(--border-color); }
@@ -186,6 +188,38 @@
             font-size: 13px;
             color: var(--subtext-color);
             margin-top: 4px;
+        }
+
+        /* Multiple Choice Styles */
+        .mc-options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .mc-option-btn {
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background-color: var(--mc-btn-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .mc-option-btn:hover {
+            border-color: #6366f1;
+        }
+        .mc-option-btn.correct {
+            background-color: #bbf7d0 !important;
+            border-color: #22c55e !important;
+            color: #14532d !important;
+        }
+        .mc-option-btn.wrong {
+            background-color: #fecaca !important;
+            border-color: #ef4444 !important;
+            color: #7f1d1d !important;
         }
 
         .matching-grid {
@@ -349,11 +383,12 @@
 
     <!-- Main App Section -->
     <div id="appSection">
-        <h2>Sun and Moon Letters Checker</h2>
+        <h2>Sun and Moon Letters Checker / پیتەکانی خۆری و مانگی</h2>
         
         <div class="mode-toggle">
             <button id="learnModeBtn" class="mode-btn active-mode" onclick="setMode('learn')">Learn Mode</button>
-            <button id="quizModeBtn" class="mode-btn inactive-mode" onclick="setMode('quiz')">Quiz Mode</button>
+            <button id="quizModeBtn" class="mode-btn inactive-mode" onclick="setMode('quiz')">Sun/Moon Quiz</button>
+            <button id="mcQuizModeBtn" class="mode-btn inactive-mode" onclick="setMode('mcquiz')">Questions Quiz ❓</button>
             <button id="matchModeBtn" class="mode-btn inactive-mode" onclick="setMode('match')">Matching Game 🧩</button>
             <button id="leaderboardModeBtn" class="mode-btn inactive-mode" onclick="setMode('leaderboard')">Leaderboard 🏆</button>
         </div>
@@ -361,15 +396,16 @@
         <!-- Learn Mode Grid -->
         <div id="learnContainer">
             <div class="grid" id="letterGrid"></div>
-            <div id="display-box" class="neutral">Select a letter above</div>
+            <div id="display-box" class="neutral">Select a letter above / پیتێک هەڵبژێرە</div>
 
             <div class="reading-section">
-                <h3>📖 Reading Practice Sentences</h3>
+                <h3>📖 Reading Practice Sentences / ڕستە بۆ ڕاهێنانی خوێندنەوە</h3>
                 
                 <div class="reading-card">
                     <div class="reading-text">
                         1. <b>الشَّمْسُ</b> طَالِعَةٌ وَ<b>القَمَرُ</b> غَائِبٌ.
                         <small>English: The sun is rising and the moon is absent.</small>
+                        <small>Kurdish: خۆر هەڵاتووە و مانگ ئاوابووە.</small>
                     </div>
                 </div>
 
@@ -377,6 +413,7 @@
                     <div class="reading-text">
                         2. <b>الوَالِدُ</b> يَكْتُبُ فِي <b>الكِتَابِ</b>.
                         <small>English: The father writes in the book.</small>
+                        <small>Kurdish: باوکەکە لە کتێبەکەدا دەنووسێت.</small>
                     </div>
                 </div>
 
@@ -384,6 +421,7 @@
                     <div class="reading-text">
                         3. <b>الطَّالِبُ</b> يَذْهَبُ إِلَى <b>المَدْرَسَةِ</b>.
                         <small>English: The student goes to school.</small>
+                        <small>Kurdish: قوتابییەکە دەچێت بۆ قوتابخانە.</small>
                     </div>
                 </div>
 
@@ -391,6 +429,7 @@
                     <div class="reading-text">
                         4. <b>الرَّجُلُ</b> يَشْرَبُ <b>المَاءَ</b> البَارِدَ.
                         <small>English: The man drinks cold water.</small>
+                        <small>Kurdish: پیاوەکە ئاوی سارد دەخواتەوە.</small>
                     </div>
                 </div>
 
@@ -398,6 +437,7 @@
                     <div class="reading-text">
                         5. <b>السَّمَاءُ</b> صَافِيَةٌ وَ<b>النَّجْمُ</b> يَلْمَعُ.
                         <small>English: The sky is clear and the star shines.</small>
+                        <small>Kurdish: ئاسمان ڕووناکە و ئەستێرەکە دەدرەوشێتەوە.</small>
                     </div>
                 </div>
 
@@ -405,6 +445,7 @@
                     <div class="reading-text">
                         6. <b>البَابُ</b> مَفْتُوحٌ وَ<b>الجَبَلُ</b> عَالٍ.
                         <small>English: The door is open and the mountain is high.</small>
+                        <small>Kurdish: دەرگاکە کراوەیە و شاخەکە بەرزە.</small>
                     </div>
                 </div>
 
@@ -412,6 +453,7 @@
                     <div class="reading-text">
                         7. <b>التَّمْرُ</b> لَذِيذٌ وَ<b>العَيْنُ</b> تَرَاهُ.
                         <small>English: The date fruit is delicious and the eye sees it.</small>
+                        <small>Kurdish: خرماکە بەتامە و چاوەکە دەیبینێت.</small>
                     </div>
                 </div>
 
@@ -419,6 +461,7 @@
                     <div class="reading-text">
                         8. <b>الزَّهْرَةُ</b> جَمِيلَةٌ فِي <b>الحَدِيقَةِ</b>.
                         <small>English: The flower is beautiful in the garden.</small>
+                        <small>Kurdish: گوڵەکە جوانە لە باخچەکەدا.</small>
                     </div>
                 </div>
 
@@ -426,6 +469,7 @@
                     <div class="reading-text">
                         9. <b>الضَّيْفُ</b> يَأْكُلُ <b>الخُبْزَ</b>.
                         <small>English: The guest is eating the bread.</small>
+                        <small>Kurdish: میوانەکە نان دەخوات.</small>
                     </div>
                 </div>
 
@@ -433,6 +477,47 @@
                     <div class="reading-text">
                         10. <b>الطَّبِيبُ</b> يَفْحَصُ <b>الوَلَدَ</b>.
                         <small>English: The doctor examines the boy.</small>
+                        <small>Kurdish: پزیشکەکە پشکنین بۆ کوڕەکە دەکات.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        11. <b>القَطُّ</b> يَنَامُ عَلَى <b>السَّرِيرِ</b>.
+                        <small>English: The cat is sleeping on the bed.</small>
+                        <small>Kurdish: پشیلەکە لەسەر بێدەکە خەوتووە.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        12. <b>التِّلْمِيذُ</b> يَكْتُبُ <b>الدَّرْسَ</b>.
+                        <small>English: The pupil writes the lesson.</small>
+                        <small>Kurdish: قوتابییەکە وانەکە دەنووسێت.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        13. <b>المُعَلِّمُ</b> يَقِفُ أَمَامَ <b>الصَّفِّ</b>.
+                        <small>English: The teacher stands in front of the class.</small>
+                        <small>Kurdish: مامۆستاکە لە پێش پۆلەکەوە وەستاوە.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        14. <b>الشَّارِعُ</b> وَاسِعٌ وَ<b>النُّورُ</b> سَاطِعٌ.
+                        <small>English: The street is wide and the light is bright.</small>
+                        <small>Kurdish: شەقامەکە فرەوانە و ڕووناکییەکە گەشە.</small>
+                    </div>
+                </div>
+
+                <div class="reading-card">
+                    <div class="reading-text">
+                        15. <b>البَحْرُ</b> عَمِيقٌ وَ<b>السَّفِينَةُ</b> كَبِيرَةٌ.
+                        <small>English: The sea is deep and the ship is large.</small>
+                        <small>Kurdish: دەریاکە قووڵە و کەشتییەکە گەورەیە.</small>
                     </div>
                 </div>
 
@@ -446,8 +531,8 @@
                 <div id="quizWordDisplay" style="font-size: 28px; margin: 10px 0;">-</div>
                 <div id="quizSentenceDisplay" class="sentence-box" style="display: none;"></div>
                 <div>
-                    <button class="quiz-option-btn btn-sun-quiz" onclick="checkAnswer('Sun')">Sun Letter ☀️</button>
-                    <button class="quiz-option-btn btn-moon-quiz" onclick="checkAnswer('Moon')">Moon Letter 🌙</button>
+                    <button class="quiz-option-btn btn-sun-quiz" onclick="checkAnswer('Sun')">Sun Letter ☀️ / پیتی خۆری</button>
+                    <button class="quiz-option-btn btn-moon-quiz" onclick="checkAnswer('Moon')">Moon Letter 🌙 / پیتی مانگی</button>
                 </div>
 
                 <div class="timer-container">
@@ -466,6 +551,23 @@
                 <button class="action-btn" style="margin-top:0;" onclick="saveScoreToLeaderboard()">Add Score to Leaderboard 🏆</button>
             </div>
             <div id="saveScoreMsg" style="margin-top: 8px; font-size: 14px; font-weight: bold;"></div>
+        </div>
+
+        <!-- Questions Multiple Choice Quiz Container -->
+        <div id="mcQuizContainer" class="hidden">
+            <div id="mc-quiz-box" class="neutral">
+                <p style="margin-top: 0;">Choose the correct word to complete the sentence:</p>
+                <div id="mcSentenceDisplay" class="sentence-box" style="font-size: 22px;"></div>
+                
+                <div id="mcOptionsGrid" class="mc-options-grid"></div>
+
+                <div id="mcQuizFeedback" style="margin-top: 15px; min-height: 24px; font-weight: bold;"></div>
+                <button id="mcNextBtn" class="action-btn hidden" onclick="nextMCQuestion()">Next Question ➡️</button>
+            </div>
+
+            <div class="score-board">
+                Questions Score: <span id="mcScore">0</span> / <span id="mcTotalQuestions">0</span>
+            </div>
         </div>
 
         <!-- Matching Mode Container -->
@@ -525,34 +627,42 @@
 <script>
     const lettersData = [
         // Sun Letters ☀️
-        { letter: "ت", type: "Sun", word: "التَّمْرُ", sentenceWithBlank: "___ لَذِيذٌ وَمُفِيدٌ.", sentenceFull: "التَّمْرُ لَذِيذٌ وَمُفِيدٌ.", meanEnglish: "The dates are delicious and useful." },
-        { letter: "ث", type: "Sun", word: "الثَّلْجُ", sentenceWithBlank: "___ بَارِدٌ جِدًّا.", sentenceFull: "الثَّلْجُ بَارِدٌ جِدًّا.", meanEnglish: "The ice/snow is very cold." },
-        { letter: "د", type: "Sun", word: "الدَّرْسُ", sentenceWithBlank: "___ سَهْلٌ وَمُفِيدٌ.", sentenceFull: "الدَّرْسُ سَهْلٌ وَمُفِيدٌ.", meanEnglish: "The lesson is easy and useful." },
-        { letter: "ذ", type: "Sun", word: "الذَّهَبُ", sentenceWithBlank: "___ ثَمِينٌ جِدًّا.", sentenceFull: "الذَّهَبُ ثَمِينٌ جِدًّا.", meanEnglish: "The gold is very precious." },
-        { letter: "ر", type: "Sun", word: "الرَّجُلُ", sentenceWithBlank: "___ يَمْشِي فِي الشَّارِعِ.", sentenceFull: "الرَّجُلُ يَمْشِي فِي الشَّارِعِ.", meanEnglish: "The man is walking in the street." },
-        { letter: "ز", type: "Sun", word: "الزَّهْرَةُ", sentenceWithBlank: "___ جَمِيلَةٌ فِي الحَدِيقَةِ.", sentenceFull: "الزَّهْرَةُ جَمِيلَةٌ فِي الحَدِيقَةِ.", meanEnglish: "The flower is beautiful in the garden." },
-        { letter: "س", type: "Sun", word: "السَّمَاءُ", sentenceWithBlank: "___ صَافِيَةٌ اليَوْمَ.", sentenceFull: "السَّمَاءُ صَافِيَةٌ اليَوْمَ.", meanEnglish: "The sky is clear today." },
-        { letter: "ش", type: "Sun", word: "الشَّمْسُ", sentenceWithBlank: "___ مُشْرِقَةٌ فِي الصَّبَاحِ.", sentenceFull: "الشَّمْسُ مُشْرِقَةٌ فِي الصَّبَاحِ.", meanEnglish: "The sun is bright in the morning." },
-        { letter: "ص", type: "Sun", word: "الصَّابُونُ", sentenceWithBlank: "___ يُنَظِّفُ اليَدَيْنِ.", sentenceFull: "الصَّابُونُ يُنَظِّفُ اليَدَيْنِ.", meanEnglish: "The soap cleans the hands." },
-        { letter: "ض", type: "Sun", word: "الضَّيْفُ", sentenceWithBlank: "___ يَصِلُ فِي المَسَاءِ.", sentenceFull: "الضَّيْفُ يَصِلُ فِي المَسَاءِ.", meanEnglish: "The guest arrives in the evening." },
-        { letter: "ط", type: "Sun", word: "الطَّبِيبُ", sentenceWithBlank: "___ يَفْحَصُ المَرِيضَ.", sentenceFull: "الطَّبِيبُ يَفْحَصُ المَرِيضَ.", meanEnglish: "The doctor examines the patient." },
-        { letter: "ظ", type: "Sun", word: "الظَّرْفُ", sentenceWithBlank: "___ عَلَى المَكْتَبِ.", sentenceFull: "الظَّرْفُ عَلَى المَكْتَبِ.", meanEnglish: "The envelope is on the desk." },
-        { letter: "ل", type: "Sun", word: "اللَّبَنُ", sentenceWithBlank: "___ مُفِيدٌ لِلصِّحَّةِ.", sentenceFull: "اللَّبَنُ مُفِيدٌ لِلصِّحَّةِ.", meanEnglish: "The milk is beneficial for health." },
-        { letter: "ن", type: "Sun", word: "النَّجْمُ", sentenceWithBlank: "___ يَلْمَعُ فِي اللَّيْلِ.", sentenceFull: "النَّجْمُ يَلْمَعُ فِي اللَّيْلِ.", meanEnglish: "The star shines at night." },
+        { letter: "ت", type: "Sun", word: "التَّمْرُ", sentenceWithBlank: "___ لَذِيذٌ وَمُفِيدٌ.", sentenceFull: "التَّمْرُ لَذِيذٌ وَمُفِيدٌ.", meanEnglish: "The dates are delicious and useful.", meanKurdish: "خورماکە بەتام و بەسوودە." },
+        { letter: "ث", type: "Sun", word: "الثَّلْجُ", sentenceWithBlank: "___ بَارِدٌ جِدًّا.", sentenceFull: "الثَّلْجُ بَارِدٌ جِدًّا.", meanEnglish: "The ice/snow is very cold.", meanKurdish: "بەفرەکە زۆر ساردە." },
+        { letter: "ث", type: "Sun", word: "الثَّعْلَبُ", sentenceWithBlank: "___ حَيَوَانٌ ذَكِيٌّ.", sentenceFull: "الثَّعْلَبُ حَيَوَانٌ ذَكِيٌّ.", meanEnglish: "The fox is a smart animal.", meanKurdish: "ڕێوییەکە ئاژەڵێکی ژێرەکە." },
+        { letter: "د", type: "Sun", word: "الدَّرْسُ", sentenceWithBlank: "___ سَهْلٌ وَمُفِيدٌ.", sentenceFull: "الدَّرْسُ سَهْلٌ وَمُفِيدٌ.", meanEnglish: "The lesson is easy and useful.", meanKurdish: "وانەکە ئاسان و بەسوودە." },
+        { letter: "ذ", type: "Sun", word: "الذَّهَبُ", sentenceWithBlank: "___ ثَمِينٌ جِدًّا.", sentenceFull: "الذَّهَبُ ثَمِينٌ جِدًّا.", meanEnglish: "The gold is very precious.", meanKurdish: "زێڕەکە زۆر بەنرخە." },
+        { letter: "ر", type: "Sun", word: "الرَّجُلُ", sentenceWithBlank: "___ يَمْشِي فِي الشَّارِعِ.", sentenceFull: "الرَّجُلُ يَمْشِي فِي الشَّارِعِ.", meanEnglish: "The man is walking in the street.", meanKurdish: "پیاوەکە لە شەقامەکەدا دەڕوات." },
+        { letter: "ر", type: "Sun", word: "الرُّمَّانُ", sentenceWithBlank: "___ فَاكِهَةٌ لَذِيذَةٌ.", sentenceFull: "الرُّمَّانُ فَاكِهَةٌ لَذِيذَةٌ.", meanEnglish: "The pomegranate is a delicious fruit.", meanKurdish: "هەنارەکە میوەیەکی بەتامە." },
+        { letter: "ز", type: "Sun", word: "الزَّهْرَةُ", sentenceWithBlank: "___ جَمِيلَةٌ فِي الحَدِيقَةِ.", sentenceFull: "الزَّهْرَةُ جَمِيلَةٌ فِي الحَدِيقَةِ.", meanEnglish: "The flower is beautiful in the garden.", meanKurdish: "گوڵەکە جوانە لە باخچەکەدا." },
+        { letter: "ز", type: "Sun", word: "الزَّيْتُونُ", sentenceWithBlank: "___ غِذَاءٌ صِحِّيٌّ.", sentenceFull: "الزَّيْتُونُ غِذَاءٌ صِحِّيٌّ.", meanEnglish: "The olive is a healthy food.", meanKurdish: "زەیتوونەکە خۆراکێکی تەندروستە." },
+        { letter: "س", type: "Sun", word: "السَّمَاءُ", sentenceWithBlank: "___ صَافِيَةٌ اليَوْمَ.", sentenceFull: "السَّمَاءُ صَافِيَةٌ اليَوْمَ.", meanEnglish: "The sky is clear today.", meanKurdish: "ئاسمان ئەمڕۆ ڕووناکە." },
+        { letter: "س", type: "Sun", word: "السَّفِينَةُ", sentenceWithBlank: "___ تَسِيرُ فِي البَحْرِ.", sentenceFull: "السَّفِينَةُ تَسِيرُ فِي البَحْرِ.", meanEnglish: "The ship sails on the sea.", meanKurdish: "کەشتییەکە لە دەریاکەدا دەڕوات." },
+        { letter: "ش", type: "Sun", word: "الشَّمْسُ", sentenceWithBlank: "___ مُشْرِقَةٌ فِي الصَّبَاحِ.", sentenceFull: "الشَّمْسُ مُشْرِقَةٌ فِي الصَّبَاحِ.", meanEnglish: "The sun is bright in the morning.", meanKurdish: "خۆرەکە بەیانیان دەدرەوشێتەوە." },
+        { letter: "ص", type: "Sun", word: "الصَّابُونُ", sentenceWithBlank: "___ يُنَظِّفُ اليَدَيْنِ.", sentenceFull: "الصَّابُونُ يُنَظِّفُ اليَدَيْنِ.", meanEnglish: "The soap cleans the hands.", meanKurdish: "سابوونەکە دەستەکان پاک دەکاتەوە." },
+        { letter: "ض", type: "Sun", word: "الضَّيْفُ", sentenceWithBlank: "___ يَصِلُ فِي المَسَاءِ.", sentenceFull: "الضَّيْفُ يَصِلُ فِي المَسَاءِ.", meanEnglish: "The guest arrives in the evening.", meanKurdish: "میوانەکە ئێوارە دەگات." },
+        { letter: "ط", type: "Sun", word: "الطَّبِيبُ", sentenceWithBlank: "___ يَفْحَصُ المَرِيضَ.", sentenceFull: "الطَّبِيبُ يَفْحَصُ المَرِيضَ.", meanEnglish: "The doctor examines the patient.", meanKurdish: "پزیشکەکە پشکنین بۆ نەخۆشەکە دەکات." },
+        { letter: "ظ", type: "Sun", word: "الظَّرْفُ", sentenceWithBlank: "___ عَلَى المَكْتَبِ.", sentenceFull: "الظَّرْفُ عَلَى المَكْتَبِ.", meanEnglish: "The envelope is on the desk.", meanKurdish: "زەرفەکە لەسەر مێزەکەیە." },
+        { letter: "ل", type: "Sun", word: "اللَّبَنُ", sentenceWithBlank: "___ مُفِيدٌ لِلصِّحَّةِ.", sentenceFull: "اللَّبَنُ مُفِيدٌ لِلصِّحَّةِ.", meanEnglish: "The milk is beneficial for health.", meanKurdish: "شیرەکە بەسوودە بۆ تەندروستی." },
+        { letter: "ن", type: "Sun", word: "النَّجْمُ", sentenceWithBlank: "___ يَلْمَعُ فِي اللَّيْلِ.", sentenceFull: "النَّجْمُ يَلْمَعُ فِي اللَّيْلِ.", meanEnglish: "The star shines at night.", meanKurdish: "ئەستێرەکە بە شەودا دەدرەوشێتەوە." },
 
         // Moon Letters 🌙
-        { letter: "أ", type: "Moon", word: "الأَبُ", sentenceWithBlank: "___ يَقْرَأُ الصَّحِيفَةَ.", sentenceFull: "الأَبُ يَقْرَأُ الصَّحِيفَةَ.", meanEnglish: "The father reads the newspaper." },
-        { letter: "ب", type: "Moon", word: "البَابُ", sentenceWithBlank: "___ مَفْتُوحٌ الآنَ.", sentenceFull: "البَابُ مَفْتُوحٌ الآنَ.", meanEnglish: "The door is open now." },
-        { letter: "ج", type: "Moon", word: "الجَبَلُ", sentenceWithBlank: "___ عَالٍ جِدًّا.", sentenceFull: "الجَبَلُ عَالٍ جِدًّا.", meanEnglish: "The mountain is very high." },
-        { letter: "ح", type: "Moon", word: "الحَدِيقَةُ", sentenceWithBlank: "___ وَاسِعَةٌ وَجَمِيلَةٌ.", sentenceFull: "الحَدِيقَةُ وَاسِعَةٌ وَجَمِيلَةٌ.", meanEnglish: "The garden is spacious and beautiful." },
-        { letter: "خ", type: "Moon", word: "الخُبْزُ", sentenceWithBlank: "___ طَازَجٌ وَلَذِيذٌ.", sentenceFull: "الخُبْزُ طَازَجٌ وَلَذِيذٌ.", meanEnglish: "The bread is fresh and delicious." },
-        { letter: "ع", type: "Moon", word: "العَيْنُ", sentenceWithBlank: "___ تَرَى الأَلْوَانَ.", sentenceFull: "العَيْنُ تَرَى الأَلْوَانَ.", meanEnglish: "The eye sees colors." },
-        { letter: "ف", type: "Moon", word: "الفَرَاشَةُ", sentenceWithBlank: "___ تُطِيرُ فَوْقَ الزَّهْرَةِ.", sentenceFull: "الفَرَاشَةُ تُطِيرُ فَوْقَ الزَّهْرَةِ.", meanEnglish: "The butterfly flies over the flower." },
-        { letter: "ق", type: "Moon", word: "القَمَرُ", sentenceWithBlank: "___ جَمِيلٌ فِي اللَّيْلِ.", sentenceFull: "القَمَرُ جَمِيلٌ فِي اللَّيْلِ.", meanEnglish: "The moon is beautiful at night." },
-        { letter: "ك", type: "Moon", word: "الكِتَابُ", sentenceWithBlank: "___ عَلَى الطَّاوِلَةِ.", sentenceFull: "الكِتَابُ عَلَى الطَّاوِلَةِ.", meanEnglish: "The book is on the table." },
-        { letter: "م", type: "Moon", word: "المَاءُ", sentenceWithBlank: "___ نَقِيٌّ وَبَارِدٌ.", sentenceFull: "المَاءُ نَقِيٌّ وَبَارِدٌ.", meanEnglish: "The water is pure and cold." },
-        { letter: "و", type: "Moon", word: "الوَلَدُ", sentenceWithBlank: "___ يَلْعَبُ فِي الحَدِيقَةِ.", sentenceFull: "الوَلَدُ يَلْعَبُ فِي الحَدِيقَةِ.", meanEnglish: "The boy plays in the garden." },
-        { letter: "ي", type: "Moon", word: "اليَوْمُ", sentenceWithBlank: "___ جَمِيلٌ وَمُشْرِقٌ.", sentenceFull: "اليَوْمُ جَمِيلٌ وَمُشْرِقٌ.", meanEnglish: "The day is beautiful and bright." }
+        { letter: "أ", type: "Moon", word: "الأَبُ", sentenceWithBlank: "___ يَقْرَأُ الصَّحِيفَةَ.", sentenceFull: "الأَبُ يَقْرَأُ الصَّحِيفَةَ.", meanEnglish: "The father reads the newspaper.", meanKurdish: "باوکەکە ڕۆژنامەکە دەخوێنێتەوە." },
+        { letter: "ب", type: "Moon", word: "البَابُ", sentenceWithBlank: "___ مَفْتُوحٌ الآنَ.", sentenceFull: "البَابُ مَفْتُوحٌ الآنَ.", meanEnglish: "The door is open now.", meanKurdish: "دەرگاکە ئێستا کراوەیە." },
+        { letter: "ج", type: "Moon", word: "الجَبَلُ", sentenceWithBlank: "___ عَالٍ جِدًّا.", sentenceFull: "الجَبَلُ عَالٍ جِدًّا.", meanEnglish: "The mountain is very high.", meanKurdish: "شاخەکە زۆر بەرزە." },
+        { letter: "ح", type: "Moon", word: "الحَدِيقَةُ", sentenceWithBlank: "___ وَاسِعَةٌ وَجَمِيلَةٌ.", sentenceFull: "الحَدِيقَةُ وَاسِعَةٌ وَجَمِيلَةٌ.", meanEnglish: "The garden is spacious and beautiful.", meanKurdish: "باخچەکە فرەوان و جوانە." },
+        { letter: "ح", type: "Moon", word: "الحَلِيبُ", sentenceWithBlank: "___ طَازَجٌ وَمُفِيدٌ.", sentenceFull: "الحَلِيبُ طَازَجٌ وَمُفِيدٌ.", meanEnglish: "The milk is fresh and useful.", meanKurdish: "شیرەکە تازە و بەسوودە." },
+        { letter: "خ", type: "Moon", word: "الخُبْزُ", sentenceWithBlank: "___ طَازَجٌ وَلَذِيذٌ.", sentenceFull: "الخُبْزُ طَازَجٌ وَلَذِيذٌ.", meanEnglish: "The bread is fresh and delicious.", meanKurdish: "نانەکە تازە و بەتامە." },
+        { letter: "خ", type: "Moon", word: "الخَاتَمُ", sentenceWithBlank: "___ مَصْنُوعٌ مِنَ الذَّهَبِ.", sentenceFull: "الخَاتَمُ مَصْنُوعٌ مِنَ الذَّهَبِ.", meanEnglish: "The ring is made of gold.", meanKurdish: "ئەنگوستیلەکە لە زێڕ دروستکراوە." },
+        { letter: "ع", type: "Moon", word: "العَيْنُ", sentenceWithBlank: "___ تَرَى الأَلْوَانَ.", sentenceFull: "العَيْنُ تَرَى الأَلْوَانَ.", meanEnglish: "The eye sees colors.", meanKurdish: "چاوەکە ڕەنگەکان دەبینێت." },
+        { letter: "ف", type: "Moon", word: "الفَرَاشَةُ", sentenceWithBlank: "___ تُطِيرُ فَوْقَ الزَّهْرَةِ.", sentenceFull: "الفَرَاشَةُ تُطِيرُ فَوْقَ الزَّهْرَةِ.", meanEnglish: "The butterfly flies over the flower.", meanKurdish: "پەپوولەکە بەسەر گوڵەکدا دەفڕێت." },
+        { letter: "ف", type: "Moon", word: "الفِيلُ", sentenceWithBlank: "___ حَيَوَانٌ ضَخْمٌ.", sentenceFull: "الفِيلُ حَيَوَانٌ ضَخْمٌ.", meanEnglish: "The elephant is a huge animal.", meanKurdish: "فیلەکە ئاژەڵێکی گەورەیە." },
+        { letter: "ق", type: "Moon", word: "القَمَرُ", sentenceWithBlank: "___ جَمِيلٌ فِي اللَّيْلِ.", sentenceFull: "القَمَرُ جَمِيلٌ فِي اللَّيْلِ.", meanEnglish: "The moon is beautiful at night.", meanKurdish: "مانگەکە بەیانیان/بەشەودا جوانە." },
+        { letter: "ق", type: "Moon", word: "القَطُّ", sentenceWithBlank: "___ يَلْعَبُ بِالكُرَةِ.", sentenceFull: "القَطُّ يَلْعَبُ بِالكُرَةِ.", meanEnglish: "The cat plays with the ball.", meanKurdish: "پشیلەکە یاری بە تۆپەکە دەکات." },
+        { letter: "ك", type: "Moon", word: "الكِتَابُ", sentenceWithBlank: "___ عَلَى الطَّاوِلَةِ.", sentenceFull: "الكِتَابُ عَلَى الطَّاوِلَةِ.", meanEnglish: "The book is on the table.", meanKurdish: "کتێبەکە لەسەر مێزەکەیە." },
+        { letter: "م", type: "Moon", word: "المَاءُ", sentenceWithBlank: "___ نَقِيٌّ وَبَارِدٌ.", sentenceFull: "المَاءُ نَقِيٌّ وَبَارِدٌ.", meanEnglish: "The water is pure and cold.", meanKurdish: "ئاوەکە پاک و ساردە." },
+        { letter: "و", type: "Moon", word: "الوَلَدُ", sentenceWithBlank: "___ يَلْعَبُ فِي الحَدِيقَةِ.", sentenceFull: "الوَلَدُ يَلْعَبُ فِي الحَدِيقَةِ.", meanEnglish: "The boy plays in the garden.", meanKurdish: "کوڕەکە یاری لە باخچەکەدا دەکات." },
+        { letter: "ي", type: "Moon", word: "اليَوْمُ", sentenceWithBlank: "___ جَمِيلٌ وَمُشْرِقٌ.", sentenceFull: "اليَوْمُ جَمِيلٌ وَمُشْرِقٌ.", meanEnglish: "The day is beautiful and bright.", meanKurdish: "ڕۆژەکە جوان و ڕووناکە." }
     ];
 
     const gridContainer = document.getElementById("letterGrid");
@@ -573,6 +683,12 @@
     let currentUser = null;
     let isSignUpMode = false;
     let currentLeaderboardFilter = 'all';
+
+    // Multiple-Choice Quiz variables
+    let mcCurrentItem = null;
+    let mcScore = 0;
+    let mcTotalQuestions = 0;
+    let mcAnswered = false;
 
     window.onload = function() {
         try {
@@ -726,25 +842,28 @@
 
     function selectLetter(item) {
         let isSun = item.type === "Sun";
-        let typeText = isSun ? "Sun Letter ☀️" : "Moon Letter 🌙";
+        let typeText = isSun ? "Sun Letter ☀️ / پیتی خۆری" : "Moon Letter 🌙 / پیتی مانگی";
         
         displayBox.className = isSun ? "sun" : "moon";
         displayBox.innerHTML = `
             Letter: ( <b>${item.letter}</b> ) - Type: ${typeText}<br>
             Word: <b>${item.word}</b><br>
             Sentence: ${item.sentenceFull}<br>
-            English: ${item.meanEnglish}
+            English: ${item.meanEnglish}<br>
+            Kurdish: ${item.meanKurdish}
         `;
     }
 
     function setMode(mode) {
         const learnBtn = document.getElementById("learnModeBtn");
         const quizBtn = document.getElementById("quizModeBtn");
+        const mcQuizBtn = document.getElementById("mcQuizModeBtn");
         const matchBtn = document.getElementById("matchModeBtn");
         const leaderboardBtn = document.getElementById("leaderboardModeBtn");
         
         const learnContainer = document.getElementById("learnContainer");
         const quizContainer = document.getElementById("quizContainer");
+        const mcQuizContainer = document.getElementById("mcQuizContainer");
         const matchContainer = document.getElementById("matchContainer");
         const leaderboardContainer = document.getElementById("leaderboardContainer");
 
@@ -752,11 +871,13 @@
 
         learnBtn.className = "mode-btn inactive-mode";
         quizBtn.className = "mode-btn inactive-mode";
+        mcQuizBtn.className = "mode-btn inactive-mode";
         matchBtn.className = "mode-btn inactive-mode";
         leaderboardBtn.className = "mode-btn inactive-mode";
         
         learnContainer.classList.add("hidden");
         quizContainer.classList.add("hidden");
+        mcQuizContainer.classList.add("hidden");
         matchContainer.classList.add("hidden");
         leaderboardContainer.classList.add("hidden");
 
@@ -767,6 +888,10 @@
             quizBtn.className = "mode-btn active-mode";
             quizContainer.classList.remove("hidden");
             nextQuestion();
+        } else if (mode === 'mcquiz') {
+            mcQuizBtn.className = "mode-btn active-mode";
+            mcQuizContainer.classList.remove("hidden");
+            nextMCQuestion();
         } else if (mode === 'match') {
             matchBtn.className = "mode-btn active-mode";
             matchContainer.classList.remove("hidden");
@@ -790,7 +915,7 @@
         
         const sentenceDisplay = document.getElementById("quizSentenceDisplay");
         sentenceDisplay.style.display = "block";
-        sentenceDisplay.innerHTML = `💬 <b>Sentence:</b> <span class="blank-space">${currentQuizItem.sentenceWithBlank}</span><br><small>(${currentQuizItem.meanEnglish})</small>`;
+        sentenceDisplay.innerHTML = `💬 <b>Sentence:</b> <span class="blank-space">${currentQuizItem.sentenceWithBlank}</span><br><small>English: (${currentQuizItem.meanEnglish})</small><br><small>Kurdish: (${currentQuizItem.meanKurdish})</small>`;
 
         startTimer();
     }
@@ -866,6 +991,78 @@
         setTimeout(() => {
             nextQuestion();
         }, 1500);
+    }
+
+    /* --- Multiple Choice Questions Quiz Logic --- */
+    function nextMCQuestion() {
+        mcAnswered = false;
+        document.getElementById("mcQuizFeedback").innerText = "";
+        document.getElementById("mcNextBtn").classList.add("hidden");
+
+        const randomIndex = Math.floor(Math.random() * lettersData.length);
+        mcCurrentItem = lettersData[randomIndex];
+
+        document.getElementById("mcSentenceDisplay").innerHTML = `
+            💬 <b>${mcCurrentItem.sentenceWithBlank}</b><br>
+            <small style="font-size: 14px; font-weight: normal; color: var(--subtext-color);">English: ${mcCurrentItem.meanEnglish}</small><br>
+            <small style="font-size: 14px; font-weight: normal; color: var(--subtext-color);">Kurdish: ${mcCurrentItem.meanKurdish}</small>
+        `;
+
+        // Generate 4 choice options (1 correct, 3 wrong)
+        let options = [mcCurrentItem.word];
+        while (options.length < 4) {
+            let randomWord = lettersData[Math.floor(Math.random() * lettersData.length)].word;
+            if (!options.includes(randomWord)) {
+                options.push(randomWord);
+            }
+        }
+        
+        // Shuffle choices randomly
+        options.sort(() => Math.random() - 0.5);
+
+        const optionsGrid = document.getElementById("mcOptionsGrid");
+        optionsGrid.innerHTML = "";
+
+        options.forEach(opt => {
+            let btn = document.createElement("button");
+            btn.className = "mc-option-btn";
+            btn.innerText = opt;
+            btn.onclick = () => checkMCAnswer(btn, opt);
+            optionsGrid.appendChild(btn);
+        });
+    }
+
+    function checkMCAnswer(selectedBtn, selectedWord) {
+        if (mcAnswered) return;
+        mcAnswered = true;
+
+        mcTotalQuestions++;
+        const feedbackBox = document.getElementById("mcQuizFeedback");
+        const allButtons = document.querySelectorAll(".mc-option-btn");
+
+        allButtons.forEach(btn => {
+            if (btn.innerText === mcCurrentItem.word) {
+                btn.classList.add("correct");
+            }
+        });
+
+        if (selectedWord === mcCurrentItem.word) {
+            mcScore++;
+            feedbackBox.style.color = "#22c55e";
+            feedbackBox.innerText = "Correct! 🎉";
+
+            if (currentUser) {
+                saveUserHighScore(currentUser, mcScore);
+            }
+        } else {
+            selectedBtn.classList.add("wrong");
+            feedbackBox.style.color = "#ef4444";
+            feedbackBox.innerText = `Incorrect! ❌ Correct answer is: ${mcCurrentItem.word}`;
+        }
+
+        document.getElementById("mcScore").innerText = mcScore;
+        document.getElementById("mcTotalQuestions").innerText = mcTotalQuestions;
+        document.getElementById("mcNextBtn").classList.remove("hidden");
     }
 
     /* --- Score & Leaderboard Management --- */
